@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import com.org.sistempenjualan.DbConnect;
 import com.org.sistempenjualan.entity.Entity;
+import java.util.Vector;
 
 /**
  *
@@ -156,6 +157,27 @@ public class SupplierDaoImpl implements SupplierDao{
             JOptionPane.showMessageDialog(null,"Error Search Supplier ("+ex.toString()+")");
         }
         return res;
+    }
+
+    @Override
+    public Vector getListSupplier() {
+        Vector vector = new Vector();
+        try{
+            String sql = "SELECT CONCAT(a.kode_supplier, ' - ', a.nama_supplier) "
+                        + "FROM mst_supplier a "
+                        + "ORDER BY a.kode_supplier ASC ";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            vector.add("-- Pilih Supplier --");
+            while(rs.next()){
+                vector.add(rs.getString(1));
+            }
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error Search Supplier ("+e.toString()+")");
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(null,"Error Search Supplier ("+ex.toString()+")");
+        }
+        return vector;
     }
     
 }

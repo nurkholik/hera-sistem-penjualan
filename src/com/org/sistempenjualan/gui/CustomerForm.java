@@ -45,7 +45,6 @@ public class CustomerForm extends javax.swing.JFrame {
         txtAlamat.setLineWrap(true);
         txtAlamat.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
         txtAlamat.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
-        setupTable();
         nikSession = a.getNikSession();
         userSession.setText("Login As: "+a.getUserSession());
         entity.setNikSession(nikSession);
@@ -57,6 +56,7 @@ public class CustomerForm extends javax.swing.JFrame {
         util.tanggalSekarang(todayDate);
         txtNoCustomer.setEditable(false);
         btnHapus.setEnabled(true);
+        setupTable();
         clearForm();
     }
     

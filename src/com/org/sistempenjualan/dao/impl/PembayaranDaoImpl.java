@@ -36,8 +36,8 @@ public class PembayaranDaoImpl implements PembayaranDao{
                     "c.no_surat_jalan as 'No Surat Jalan', "+
                     "a.metode_pembayaran as 'Metode Pembayaran', "+
                     "a.jenis_pembayaran as 'Jenis Pembayaran', "+
-                    "a.tanggal_transaksi as 'Tanggal Transaksi', "+
-                    "a.tanggal_bayar as 'Tanggal Bayar', "+
+                    "DATE_FORMAT(a.tanggal_transaksi,'%d %M %Y') as 'Tanggal Transaksi', "+
+                    "DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', "+
                     "a.total_bayar as 'Total Bayar', "+
                     "a.yang_dibayar as 'Yang Dibayarkan', "+
                     "a.selisih Selisih, "+
@@ -69,8 +69,8 @@ public class PembayaranDaoImpl implements PembayaranDao{
                     "c.no_surat_jalan as 'No Surat Jalan', "+
                     "a.metode_pembayaran as 'Metode Pembayaran', "+
                     "a.jenis_pembayaran as 'Jenis Pembayaran', "+
-                    "a.tanggal_transaksi as 'Tanggal Transaksi', "+
-                    "a.tanggal_bayar as 'Tanggal Bayar', "+
+                    "DATE_FORMAT(a.tanggal_transaksi,'%d %M %Y') as 'Tanggal Transaksi', "+
+                    "DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', "+
                     "a.total_bayar as 'Total Bayar', "+
                     "a.yang_dibayar as 'Yang Dibayarkan', "+
                     "a.selisih Selisih, "+
@@ -154,7 +154,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
             String sql = "UPDATE transaksi a "
                         + "SET a.metode_pembayaran = ?, "
                         + "a.jenis_pembayaran = ?, "
-                        + "a.tanggal_bayar = ?, "
+                        + "a.tanggal_bayar = STR_TO_DATE(?,'%d %M %Y'), "
                         + "a.total_bayar = ?, "
                         + "a.yang_dibayar = ?, "
                         + "a.selisih = ?, "
@@ -164,16 +164,16 @@ public class PembayaranDaoImpl implements PembayaranDao{
             pst = con.prepareStatement(sql);
             pst.setString(1, entity.getMetodePembayaran());
             pst.setString(2, entity.getJenisPembayaran());
-            pst.setString(4, entity.getTanggalBayar());
-            pst.setInt(5, entity.getTotalBayar());
-            pst.setInt(6, entity.getYangDibayar());
-            pst.setInt(7, entity.getSelisih());
-            pst.setString(8, entity.getNikSession());
-            pst.setString(9, entity.getNoTransaksi());
+            pst.setString(3, entity.getTanggalBayar());
+            pst.setInt(4, entity.getTotalBayar());
+            pst.setInt(5, entity.getYangDibayar());
+            pst.setInt(6, entity.getSelisih());
+            pst.setString(7, entity.getNikSession());
+            pst.setString(8, entity.getNoTransaksi());
             pst.execute();
             result = true;
         } catch (SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
+            JOptionPane.showMessageDialog(null,"Error Update transaksi ("+e.toString()+")");
         }
         
         return result;

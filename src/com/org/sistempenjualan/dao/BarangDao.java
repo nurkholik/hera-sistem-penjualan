@@ -15,6 +15,8 @@ import java.util.Vector;
 public interface BarangDao {
     // Form Barang
     public ResultSet setBarangTable();
+    public ResultSet setBarangTable(String param);
+    public String getLastKodeBarang();
     
     // Form Detail Pemesanan & Edit Detail Pemesanan
     public int getLastStok(String namaBarang);

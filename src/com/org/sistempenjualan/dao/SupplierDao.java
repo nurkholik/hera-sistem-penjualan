@@ -7,6 +7,7 @@ package com.org.sistempenjualan.dao;
 
 import com.org.sistempenjualan.entity.Entity;
 import java.sql.ResultSet;
+import java.util.Vector;
 
 /**
  *
@@ -19,4 +20,5 @@ public interface SupplierDao {
     public boolean editSupplier(Entity entity);
     public boolean deleteSupplier(String kodeSupplier);
     public ResultSet getSupplierByParam(String param);
+    public Vector getListSupplier();
 }

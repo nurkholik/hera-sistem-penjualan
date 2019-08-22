@@ -4,13 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/gui/LoginForm.java</file>
-            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/dao/SuratJalanDao.java</file>
-            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/gui/PembayaranForm.java</file>
-            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/dao/PemesananDao.java</file>
+            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/gui/PembayaranForm1.java</file>
             <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/dao/impl/PembayaranDaoImpl.java</file>
             <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/dao/impl/SuratJalanDaoImpl.java</file>
-            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/dao/impl/PemesananDaoImpl.java</file>
-            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/dao/PembayaranDao.java</file>
+            <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/gui/CustomerForm.java</file>
             <file>file:/D:/PROJEK/SistemPenjualan/src/com/org/sistempenjualan/gui/SuratJalanForm.java</file>
         </group>
     </open-files>

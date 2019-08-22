@@ -18,7 +18,8 @@ AND a.no_transaksi = ?
 SELECT CASE WHEN d.no_surat_jalan IS NULL OR d.no_surat_jalan = '' THEN ' - ' ELSE d.no_surat_jalan END as 'No Surat Jalan',
 a.no_pemesanan, c.nama_barang, b.jumlah, c.harga, b.jumlah * c.harga, 
 DATE_FORMAT(a.tanggal_pemesanan,'%d %M %Y') tgl_pemesanan, 
-(SELECT SUM(e.jumlah * f.harga) FROM detail_pemesanan e, mst_barang f WHERE e.kode_barang = f.kode_barang AND e.id_pemesanan = a.id_pemesanan) grand_total
+(SELECT SUM(e.jumlah * f.harga) FROM detail_pemesanan e, mst_barang f WHERE e.kode_barang = f.kode_barang AND e.id_pemesanan = a.id_pemesanan) grand_total,
+v.no_customer, v.nama_customer, v.alamat, v.kota, v.no_telp
 FROM header_pemesanan a
 JOIN detail_pemesanan b
 ON a.id_pemesanan = b.id_pemesanan
@@ -26,4 +27,6 @@ JOIN mst_barang c
 ON b.kode_barang = c.kode_barang
 LEFT JOIN surat_jalan d
 ON d.id_pemesanan = a.id_pemesanan
+JOIN mst_customer v
+ON a.no_customer = v.no_customer
 WHERE a.no_pemesanan = 'PO/2019/08/0009'

@@ -9,7 +9,11 @@ import com.org.sistempenjualan.entity.Entity;
 import javax.swing.Box;
 import com.org.sistempenjualan.Utility;
 import com.org.sistempenjualan.dao.BarangDao;
+import com.org.sistempenjualan.dao.SupplierDao;
 import com.org.sistempenjualan.dao.impl.BarangDaoImpl;
+import com.org.sistempenjualan.dao.impl.SupplierDaoImpl;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -23,6 +27,7 @@ public class BarangForm extends javax.swing.JFrame {
     Entity entity = new Entity();
     Utility util = new Utility();
     BarangDao dao = new BarangDaoImpl();
+    SupplierDao sDao = new SupplierDaoImpl();
     
     // Global Variabel
     boolean flagUpdate = false;
@@ -41,12 +46,57 @@ public class BarangForm extends javax.swing.JFrame {
         mbItem.add(userSession);
         util.tanggalSekarang(todayDate);
         setupTable();
+        getListSupplier();
+        clearForm();
+        generateKodeBarang();
     }
     
     public void setupTable(){
         tblBarang.setModel(DbUtils.resultSetToTableModel(dao.setBarangTable()));
         tblBarang.removeColumn(tblBarang.getColumnModel().getColumn(0));
         util.adjustColumn(tblBarang);
+    }
+    
+    public void getListSupplier(){
+        cbSupplier.setModel(new DefaultComboBoxModel(sDao.getListSupplier()));
+    }
+    
+    public void clearForm(){
+        cbSupplier.setSelectedIndex(0);
+        txtNamaBarang.setText("");
+        txtCariBarang.setText("");
+        txtNamaBarang.setText("");
+        txtJmlBarang.setText("0");
+        txtHarga.setText("0");
+    }
+    
+    public void generateKodeBarang(){
+        try{
+            String lastKode = dao.getLastKodeBarang();
+            String newKode = "";
+            if(!lastKode.equals("")){
+                String lastSeq = lastKode.substring(2);
+                String newSeqKode = ""+(Integer.parseInt(lastSeq)+1);
+                String nol = "";
+                if(newSeqKode.length() == 1){
+                    nol = "000";
+                } else if(newSeqKode.length() == 2){
+                    nol = "00";
+                } else if(newSeqKode.length() == 3){
+                    nol = "0";
+                } else if(newSeqKode.length() == 4){
+                    nol = "";
+                }
+
+                newKode = "PR"+nol+newSeqKode;
+            }else{
+                newKode = "PR/0001";
+            }
+            
+            txtKodeBarang.setText(newKode);
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this,e);
+        }
     }
 
     /**
@@ -59,7 +109,6 @@ public class BarangForm extends javax.swing.JFrame {
     private void initComponents() {
 
         lblSupplier = new javax.swing.JLabel();
-        txtSupplier = new javax.swing.JTextField();
         lblNamaBarang = new javax.swing.JLabel();
         txtNamaBarang = new javax.swing.JTextField();
         lblJmlBarang = new javax.swing.JLabel();
@@ -68,11 +117,15 @@ public class BarangForm extends javax.swing.JFrame {
         tblBarang = new javax.swing.JTable();
         lblHarga = new javax.swing.JLabel();
         txtHarga = new javax.swing.JTextField();
-        btnCariSupplier = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
         txtCariBarang = new javax.swing.JTextField();
         lblCariBarang = new javax.swing.JLabel();
+        cbSupplier = new javax.swing.JComboBox();
+        btnReset = new javax.swing.JButton();
+        lblNamaBarang1 = new javax.swing.JLabel();
+        txtKodeBarang = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         mbItem = new javax.swing.JMenuBar();
         btnLogOut = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -108,13 +161,25 @@ public class BarangForm extends javax.swing.JFrame {
         lblHarga.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblHarga.setText("Harga Barang");
 
-        btnCariSupplier.setText("Cari");
-
         btnSimpan.setText("SIMPAN");
 
         btnHapus.setText("HAPUS");
 
         lblCariBarang.setText("Cari :");
+
+        cbSupplier.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnReset.setText("RESET");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
+
+        lblNamaBarang1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblNamaBarang1.setText("Kode Barang");
+
+        jLabel1.setText("Rp.");
 
         btnLogOut.setText("Server");
 
@@ -148,22 +213,27 @@ public class BarangForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblJmlBarang)
-                            .addComponent(txtJmlBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNamaBarang)
-                            .addComponent(txtNamaBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblSupplier)
-                            .addComponent(lblHarga)
-                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnCariSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(lblJmlBarang)
+                                .addComponent(txtJmlBarang)
+                                .addComponent(lblNamaBarang)
+                                .addComponent(txtNamaBarang)
+                                .addComponent(lblSupplier)
+                                .addComponent(lblHarga)
+                                .addComponent(cbSupplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblNamaBarang1)
+                            .addComponent(txtKodeBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(29, 29, 29))
         );
@@ -175,14 +245,16 @@ public class BarangForm extends javax.swing.JFrame {
                     .addComponent(txtCariBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCariBarang))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblSupplier)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCariSupplier))
+                        .addComponent(cbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(lblNamaBarang1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtKodeBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblNamaBarang)
                         .addGap(18, 18, 18)
                         .addComponent(txtNamaBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,24 +265,34 @@ public class BarangForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblHarga)
                         .addGap(18, 18, 18)
-                        .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(57, 57, 57)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnSimpan)
-                            .addComponent(btnHapus)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(72, Short.MAX_VALUE))
+                            .addComponent(btnHapus)
+                            .addComponent(btnReset)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        generateKodeBarang();
+        clearForm();
+    }//GEN-LAST:event_btnResetActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCariSupplier;
     private javax.swing.JButton btnHapus;
     private javax.swing.JMenu btnLogOut;
+    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSimpan;
+    private javax.swing.JComboBox cbSupplier;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -218,6 +300,7 @@ public class BarangForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblHarga;
     private javax.swing.JLabel lblJmlBarang;
     private javax.swing.JLabel lblNamaBarang;
+    private javax.swing.JLabel lblNamaBarang1;
     private javax.swing.JLabel lblSupplier;
     private javax.swing.JMenuBar mbItem;
     private javax.swing.JTable tblBarang;
@@ -225,8 +308,8 @@ public class BarangForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtCariBarang;
     private javax.swing.JTextField txtHarga;
     private javax.swing.JTextField txtJmlBarang;
+    private javax.swing.JTextField txtKodeBarang;
     private javax.swing.JTextField txtNamaBarang;
-    private javax.swing.JTextField txtSupplier;
     private javax.swing.JMenu userSession;
     // End of variables declaration//GEN-END:variables
 }

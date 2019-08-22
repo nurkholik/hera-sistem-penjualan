@@ -28,7 +28,7 @@ public class BarangDaoImpl implements BarangDao{
     public ResultSet setBarangTable() {
         ResultSet res = null;
         try{
-            String sql = "SELECT a.id_barang, "
+            String sql = "SELECT a.kode_barang as 'Kode Barang', "
                         + "a.nama_barang as 'Nama Barang', "
                         + "a.jumlah Jumlah, "
                         + "a.harga Harga, "
@@ -116,6 +116,49 @@ public class BarangDaoImpl implements BarangDao{
             JOptionPane.showMessageDialog(null,"Error Update Stok Barang ("+e.toString()+")");
         }
         
+        return result;
+    }
+
+    @Override
+    public ResultSet setBarangTable(String param) {
+        ResultSet res = null;
+        try{
+            String sql = "SELECT a.kode_barang as 'Kode Barang', "
+                        + "a.nama_barang as 'Nama Barang', "
+                        + "a.jumlah Jumlah, "
+                        + "a.harga Harga, "
+                        + "b.nama_supplier Supplier "
+                        + "FROM mst_barang a, mst_supplier b "
+                        + "WHERE a.kode_supplier = b.kode_supplier "
+                        + "AND (a.kode_barang LIKE ? "
+                        + "OR a.nama_barang LIKE ? "
+                        + "OR b.nama_supplier LIKE ?) ";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, "%"+param+"%");
+            pst.setString(2, "%"+param+"%");
+            pst.setString(3, "%"+param+"%");
+            res = pst.executeQuery();
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
+        }
+        return res;
+    }
+
+    @Override
+    public String getLastKodeBarang() {
+        String result = "";
+        try{
+            String sql = "SELECT a.kode_barang "
+                        + "FROM mst_barang a "
+                        + "ORDER BY a.kode_barang DESC ";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if(rs.next()){
+                result = rs.getString(1);
+            }
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error get Stok ("+e.toString()+")");
+        }
         return result;
     }
     
