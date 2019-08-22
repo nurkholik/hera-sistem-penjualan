@@ -8,8 +8,20 @@ AND b.no_customer = e.no_customer
 AND a.no_surat_jalan = ?
 
 // QUERY TABEL DI CETAKAN TANDA TERIMA
-SELECT a.tanggal_transaksi, a.no_transaksi, a.total_bayar, a.tanggal_bayar, a.metode_pembayaran, a.jenis_pembayaran, c.nama_customer, c.alamat, c.kota, c.no_telp
+SELECT DATE_FORMAT(a.tanggal_transaksi,'%d %M %Y'), a.no_transaksi, a.total_bayar, DATE_FORMAT(a.tanggal_bayar,'%d %M %Y), a.metode_pembayaran, a.jenis_pembayaran, c.nama_customer, c.alamat, c.kota, c.no_telp
 FROM transaksi a, header_pemesanan b, mst_customer c
 WHERE a.id_pemesanan = b.id_pemesanan
 AND b.no_customer = c.no_customer
 AND a.no_transaksi = ?
+
+// QUERY TABEL INVOICE
+SELECT CASE WHEN d.no_surat_jalan IS NULL OR d.no_surat_jalan = '' THEN ' - ' ELSE d.no_surat_jalan END as 'No Surat Jalan',
+a.no_pemesanan, c.nama_barang, b.jumlah, c.harga, b.jumlah * c.harga
+FROM header_pemesanan a
+JOIN detail_pemesanan b
+ON a.id_pemesanan = b.id_pemesanan
+JOIN mst_barang c
+ON b.kode_barang = c.kode_barang
+LEFT JOIN surat_jalan d
+ON d.id_pemesanan = a.id_pemesanan
+WHERE a.no_pemesanan = ?
