@@ -6,3 +6,10 @@ AND b.id_pemesanan = c.id_pemesanan
 AND c.kode_barang = d.kode_barang
 AND b.no_customer = e.no_customer
 AND a.no_surat_jalan = ?
+
+// QUERY TABEL DI CETAKAN TANDA TERIMA
+SELECT a.tanggal_transaksi, a.no_transaksi, a.total_bayar, a.tanggal_bayar, a.metode_pembayaran, a.jenis_pembayaran, c.nama_customer, c.alamat, c.kota, c.no_telp
+FROM transaksi a, header_pemesanan b, mst_customer c
+WHERE a.id_pemesanan = b.id_pemesanan
+AND b.no_customer = c.no_customer
+AND a.no_transaksi = ?
