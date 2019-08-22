@@ -52,5 +52,5 @@ JOIN header_pemesanan b
 ON a.id_pemesanan = b.id_pemesanan 
 LEFT JOIN surat_jalan c 
 ON b.id_pemesanan = c.id_pemesanan 
-WHERE DATE_FORMAT(a.tanggal_transaksi, '%M %Y') = DATE_FORMAT(?,'%M %Y')
+WHERE DATE_FORMAT(a.tanggal_transaksi, '%M %Y') BETWEEN DATE_FORMAT(?,'%M %Y') AND DATE_FORMAT(?,'%M %Y')
 ORDER BY a.no_transaksi DESC
