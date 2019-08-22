@@ -358,7 +358,7 @@ public class BarangForm extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         boolean result = false;
-        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
+        
         try{
             entity.setKodeBarang(txtKodeBarang.getText());
             entity.setNamaBarang(txtNamaBarang.getText());
@@ -367,9 +367,10 @@ public class BarangForm extends javax.swing.JFrame {
             entity.setKodeSupplier(kodeSupplier);
             if(txtNamaBarang.getText().equals("")){
                 JOptionPane.showMessageDialog(rootPane, "Nama Barang Tidak Boleh Kosong!");
-            }else if(kodeSupplier.equals("")){
+            }else if(cbSupplier.getSelectedIndex() == 0){
                 JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Supplier Terlebih Dulu!");
             }else{
+                int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
                 if(confirm == 0){
                     if(!flagUpdate){
                         result = dao.addBarang(entity);
@@ -400,7 +401,7 @@ public class BarangForm extends javax.swing.JFrame {
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         boolean result = false;
         String kodeBarang = txtKodeBarang.getText();
-        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menghapus data?","Simpan Data",JOptionPane.YES_NO_OPTION);
         try{
             if(confirm==0){
                 result = dao.deleteBarang(kodeBarang);
