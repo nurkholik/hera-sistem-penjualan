@@ -5,6 +5,7 @@
  */
 package com.org.sistempenjualan.dao;
 
+import com.org.sistempenjualan.entity.Entity;
 import java.sql.ResultSet;
 import java.util.Vector;
 
@@ -17,6 +18,9 @@ public interface BarangDao {
     public ResultSet setBarangTable();
     public ResultSet setBarangTable(String param);
     public String getLastKodeBarang();
+    public boolean addBarang(Entity entity);
+    public boolean editBarang(Entity entity);
+    public boolean deleteBarang(String kodeBarang);
     
     // Form Detail Pemesanan & Edit Detail Pemesanan
     public int getLastStok(String namaBarang);

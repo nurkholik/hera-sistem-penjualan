@@ -175,6 +175,11 @@ public class BarangForm extends javax.swing.JFrame {
         });
 
         btnHapus.setText("HAPUS");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         txtCariBarang.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -335,7 +340,46 @@ public class BarangForm extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         boolean result = false;
+        try{
+            entity.setKodeBarang(txtKodeBarang.getText());
+            entity.setNamaBarang(txtNamaBarang.getText());
+            entity.setJumlahBarang(Integer.parseInt(txtJmlBarang.getText()));
+            entity.setHargaBarang(Integer.parseInt(txtHarga.getText()));
+            entity.setKodeSupplier(kodeSupplier);
+            if(flagUpdate){
+                result = dao.addBarang(entity);
+                if(result){
+                    JOptionPane.showMessageDialog(rootPane, "Berhasil simpan barang!");
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Error simpan barang!");
+                }
+            }else{
+                result = dao.editBarang(entity);
+                if(result){
+                    JOptionPane.showMessageDialog(rootPane, "Berhasil update barang!");
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Error update barang!");
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(rootPane, "Error simpan barang! "+e);
+        }
     }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        boolean result = false;
+        String kodeBarang = txtKodeBarang.getText();
+        try{
+            result = dao.deleteBarang(kodeBarang);
+            if(result){
+                JOptionPane.showMessageDialog(rootPane, "Berhasil hapus barang! ");
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Error hapus barang! ");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(rootPane, "Error hapus barang! "+e);
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

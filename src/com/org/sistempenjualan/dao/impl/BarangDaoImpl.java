@@ -7,6 +7,7 @@ package com.org.sistempenjualan.dao.impl;
 
 import com.org.sistempenjualan.DbConnect;
 import com.org.sistempenjualan.dao.BarangDao;
+import com.org.sistempenjualan.entity.Entity;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -159,6 +160,73 @@ public class BarangDaoImpl implements BarangDao{
         } catch (SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null,"Error get Stok ("+e.toString()+")");
         }
+        return result;
+    }
+
+    @Override
+    public boolean addBarang(Entity entity) {
+        boolean result = false;
+        try{
+            String sql = "INSERT INTO mst_barang (kode_barang,nama_barang,jumlah,harga,kode_supplier,tanggal_entri,update_by) "
+                    + "values (?,?,?,?,?,DATE_FORMAT(NOW(),'%Y-%m-%d %T'),?)";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, entity.getKodeBarang());
+            pst.setString(2, entity.getNamaBarang());
+            pst.setInt(3, entity.getJumlahBarang());
+            pst.setInt(4, entity.getHargaBarang());
+            pst.setString(5, entity.getKodeSupplier());
+            pst.setString(6, entity.getNikSession());
+            pst.execute();
+            result = true;
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error get Stok ("+e.toString()+")");
+        }
+        
+        return result;
+    }
+
+    @Override
+    public boolean editBarang(Entity entity) {
+        boolean result = false;
+        try{
+            String sql = "UPDATE mst_barang a "
+                        + "SET a.nama_barang = ?, "
+                        + "a.jumlah = ?, "
+                        + "a.harga = ?, "
+                        + "a.kode_supplier = ? "
+                        + "a.tanggal_entri = DATE_FORMAT(NOW(),'%Y-%m-%d %T'), "
+                        + "a.update_by = ? "
+                        + "WHERE a.kode_barang = ? ";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, entity.getKodeBarang());
+            pst.setString(2, entity.getNamaBarang());
+            pst.setInt(3, entity.getJumlahBarang());
+            pst.setInt(4, entity.getHargaBarang());
+            pst.setString(5, entity.getKodeSupplier());
+            pst.setString(6, entity.getNikSession());
+            pst.setString(7, entity.getKodeBarang());
+            pst.executeUpdate();
+            result = true;
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error get Stok ("+e.toString()+")");
+        }
+        
+        return result;
+    }
+
+    @Override
+    public boolean deleteBarang(String kodeBarang) {
+        boolean result = false;
+        try{
+            String sql = "DELETE FROM mst_barang a WHERE a.kode_barang = ? ";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, kodeBarang);
+            pst.executeUpdate();
+            result = true;
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error get Stok ("+e.toString()+")");
+        }
+        
         return result;
     }
     
