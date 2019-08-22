@@ -46,7 +46,7 @@ public class Entity {
     private String kodeBarang;
     private String namaBarang;
     private int jumlahBarang;
-    private String hargaBarang;
+    private int hargaBarang;
     
     // variabel surat jalan
     private int idSuratJalan;
@@ -268,11 +268,11 @@ public class Entity {
         this.jumlahBarang = jumlahBarang;
     }
 
-    public String getHargaBarang() {
+    public int getHargaBarang() {
         return hargaBarang;
     }
 
-    public void setHargaBarang(String hargaBarang) {
+    public void setHargaBarang(int hargaBarang) {
         this.hargaBarang = hargaBarang;
     }
 
