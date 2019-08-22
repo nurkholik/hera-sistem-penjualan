@@ -174,8 +174,8 @@ public class LoginForm extends javax.swing.JFrame  {
             String kode = entity.getRoleSession().toLowerCase();
                 switch(kode){
                     case"admin":
-                        pembayaranForm = new PembayaranForm(entity);
-                        pembayaranForm.setVisible(true);
+//                        pembayaranForm = new PembayaranForm(entity);
+//                        pembayaranForm.setVisible(true);
 //                        detailPemesananForm = new DetailPemesananForm(entity);
 //                        detailPemesananForm.setVisible(true);
 //                        pemesananBaruForm = new PemesananBaruForm(entity);
@@ -192,8 +192,8 @@ public class LoginForm extends javax.swing.JFrame  {
 //                        supplierForm.setVisible(true);
 //                        userForm = new UserForm(entity);
 //                        userForm.setVisible(true);
-//                        barangForm = new BarangForm(entity);
-//                        barangForm.setVisible(true);
+                        barangForm = new BarangForm(entity);
+                        barangForm.setVisible(true);
                         this.dispose();   
                         break;
                     case"inventory":

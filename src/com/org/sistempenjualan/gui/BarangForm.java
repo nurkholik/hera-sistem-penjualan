@@ -14,6 +14,7 @@ import com.org.sistempenjualan.dao.impl.BarangDaoImpl;
 import com.org.sistempenjualan.dao.impl.SupplierDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -32,6 +33,7 @@ public class BarangForm extends javax.swing.JFrame {
     // Global Variabel
     boolean flagUpdate = false;
     String nikSession = "";
+    String kodeSupplier = "";
     
     public BarangForm(Entity a) {
         initComponents();
@@ -53,7 +55,6 @@ public class BarangForm extends javax.swing.JFrame {
     
     public void setupTable(){
         tblBarang.setModel(DbUtils.resultSetToTableModel(dao.setBarangTable()));
-        tblBarang.removeColumn(tblBarang.getColumnModel().getColumn(0));
         util.adjustColumn(tblBarang);
     }
     
@@ -156,18 +157,39 @@ public class BarangForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblBarang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBarangMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblBarang);
 
         lblHarga.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblHarga.setText("Harga Barang");
 
         btnSimpan.setText("SIMPAN");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         btnHapus.setText("HAPUS");
+
+        txtCariBarang.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariBarangKeyReleased(evt);
+            }
+        });
 
         lblCariBarang.setText("Cari :");
 
         cbSupplier.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbSupplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSupplierActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("RESET");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
@@ -281,9 +303,39 @@ public class BarangForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        flagUpdate = false;
         generateKodeBarang();
         clearForm();
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void tblBarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBarangMouseClicked
+        flagUpdate = true;
+        int row = tblBarang.getSelectedRow();
+        
+        TableModel model = tblBarang.getModel();
+        
+        txtKodeBarang.setText(model.getValueAt(row, 0).toString());
+        txtNamaBarang.setText(model.getValueAt(row, 1).toString());
+        txtJmlBarang.setText(model.getValueAt(row, 2).toString());
+        txtHarga.setText(model.getValueAt(row, 3).toString());
+        cbSupplier.setSelectedItem(model.getValueAt(row, 4).toString());
+    }//GEN-LAST:event_tblBarangMouseClicked
+
+    private void txtCariBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariBarangKeyReleased
+        String param = txtCariBarang.getText();
+        tblBarang.setModel(DbUtils.resultSetToTableModel(dao.setBarangTable(param)));
+        util.adjustColumn(tblBarang);
+    }//GEN-LAST:event_txtCariBarangKeyReleased
+
+    private void cbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSupplierActionPerformed
+        String supplier = (String) cbSupplier.getSelectedItem();
+        String[] arrSupp = supplier.split(" - ");
+        kodeSupplier = arrSupp[0];
+    }//GEN-LAST:event_cbSupplierActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        boolean result = false;
+    }//GEN-LAST:event_btnSimpanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

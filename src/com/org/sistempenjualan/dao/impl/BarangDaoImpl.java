@@ -32,7 +32,7 @@ public class BarangDaoImpl implements BarangDao{
                         + "a.nama_barang as 'Nama Barang', "
                         + "a.jumlah Jumlah, "
                         + "a.harga Harga, "
-                        + "b.nama_supplier Supplier "
+                        + "CONCAT (a.kode_supplier,' - ',b.nama_supplier) Supplier "
                         + "FROM mst_barang a, mst_supplier b "
                         + "WHERE a.kode_supplier = b.kode_supplier ";
             pst = con.prepareStatement(sql);
@@ -127,7 +127,7 @@ public class BarangDaoImpl implements BarangDao{
                         + "a.nama_barang as 'Nama Barang', "
                         + "a.jumlah Jumlah, "
                         + "a.harga Harga, "
-                        + "b.nama_supplier Supplier "
+                        + "CONCAT (a.kode_supplier,' - ',b.nama_supplier) Supplier "
                         + "FROM mst_barang a, mst_supplier b "
                         + "WHERE a.kode_supplier = b.kode_supplier "
                         + "AND (a.kode_barang LIKE ? "
