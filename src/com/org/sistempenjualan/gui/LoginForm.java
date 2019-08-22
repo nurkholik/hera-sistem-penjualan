@@ -44,8 +44,6 @@ public class LoginForm extends javax.swing.JFrame  {
     public BarangForm barangForm;
     public CustomerForm customerForm;
     public SuratJalanForm suratJalanForm;
-    public SuratJalanBaruForm suratJalanBaruForm;
-    public DetailSuratJalanForm detailSuratJalanForm;
     public PemesananForm pemesananForm;
     public PemesananBaruForm pemesananBaruForm;
     public DetailPemesananForm detailPemesananForm;
@@ -182,23 +180,31 @@ public class LoginForm extends javax.swing.JFrame  {
 //                        pemesananBaruForm.setVisible(true);
 //                        pemesananForm = new PemesananForm(entity);
 //                        pemesananForm.setVisible(true);
-//                        detailSuratJalanForm = new DetailSuratJalanForm(entity);
-//                        detailSuratJalanForm.setVisible(true);
 //                        suratJalanForm = new SuratJalanForm(entity);
 //                        suratJalanForm.setVisible(true);
 //                        customerForm = new CustomerForm(entity);
 //                        customerForm.setVisible(true);
 //                        supplierForm = new SupplierForm(entity);
 //                        supplierForm.setVisible(true);
-//                        userForm = new UserForm(entity);
-//                        userForm.setVisible(true);
-                        barangForm = new BarangForm(entity);
-                        barangForm.setVisible(true);
+                        userForm = new UserForm(entity);
+                        userForm.setVisible(true);
+//                        barangForm = new BarangForm(entity);
+//                        barangForm.setVisible(true);
                         this.dispose();   
                         break;
                     case"inventory":
-                        barangForm = new BarangForm(entity);
-                        barangForm.setVisible(true);
+                        supplierForm = new SupplierForm(entity);
+                        supplierForm.setVisible(true);
+                        this.dispose();   
+                        break;
+                    case"kasir":
+                        pembayaranForm = new PembayaranForm(entity);
+                        pembayaranForm.setVisible(true);
+                        this.dispose();   
+                        break;
+                    case"registrasi":
+                        customerForm = new CustomerForm(entity);
+                        customerForm.setVisible(true);
                         this.dispose();   
                         break;
                 }

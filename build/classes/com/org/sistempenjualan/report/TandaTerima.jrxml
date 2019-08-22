@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
 	<property name="ireport.zoom" value="0.7513148009015794"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="22"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="no_transaksi" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -30,7 +30,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 	<title>
 		<band height="157" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="802" height="20"/>
+				<reportElement x="0" y="0" width="802" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -44,7 +44,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[TANDA TERIMA / RECEIPT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="27" width="802" height="104"/>
+				<reportElement x="0" y="27" width="802" height="104" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -58,7 +58,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[KEPADA : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="131" width="802" height="20"/>
+				<reportElement x="0" y="131" width="802" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -72,14 +72,14 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Sudah terima dari / Received From: PT. SINYOUNG ABADI]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="368" y="48" width="187" height="20"/>
+				<reportElement x="368" y="48" width="187" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_customer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="368" y="68" width="187" height="20"/>
+				<reportElement x="368" y="68" width="223" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
@@ -93,7 +93,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 	<columnHeader>
 		<band height="46" splitType="Stretch">
 			<staticText>
-				<reportElement x="402" y="19" width="133" height="20"/>
+				<reportElement x="402" y="19" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -107,7 +107,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Payment Method]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="668" y="19" width="133" height="20"/>
+				<reportElement x="668" y="19" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -121,7 +121,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Pay Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="535" y="0" width="133" height="20"/>
+				<reportElement x="535" y="0" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -135,7 +135,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Jumlah]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="163" y="0" width="239" height="20"/>
+				<reportElement x="163" y="0" width="239" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -149,7 +149,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[No. Transaksi]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="668" y="0" width="133" height="20"/>
+				<reportElement x="668" y="0" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -163,7 +163,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Tgl. Bayar]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="32" height="39"/>
+				<reportElement x="0" y="0" width="32" height="39" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -177,7 +177,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="163" y="19" width="239" height="20"/>
+				<reportElement x="163" y="19" width="239" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -191,7 +191,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Transaction No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="535" y="19" width="133" height="20"/>
+				<reportElement x="535" y="19" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -205,7 +205,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="31" y="19" width="133" height="20"/>
+				<reportElement x="31" y="19" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -219,7 +219,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Transaction Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="0" width="133" height="20"/>
+				<reportElement x="402" y="0" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -233,7 +233,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<text><![CDATA[Metode Pembayaran]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="31" y="0" width="133" height="20"/>
+				<reportElement x="31" y="0" width="133" height="20" />
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -251,7 +251,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 	<detail>
 		<band height="38" splitType="Stretch">
 			<textField>
-				<reportElement x="30" y="5" width="132" height="20"/>
+				<reportElement x="30" y="5" width="132" height="20" />
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -265,7 +265,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<textFieldExpression><![CDATA[$F{tanggal_transaksi}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="163" y="5" width="238" height="20"/>
+				<reportElement x="163" y="5" width="238" height="20" />
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -278,8 +278,8 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{no_transaksi}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
-				<reportElement x="534" y="5" width="131" height="20"/>
+			<textField pattern="Rp #,##0.00">
+				<reportElement x="534" y="5" width="131" height="20" />
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -293,7 +293,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<textFieldExpression><![CDATA[$F{total_bayar}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="667" y="5" width="133" height="20"/>
+				<reportElement x="667" y="5" width="133" height="20" />
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -304,20 +304,20 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tanggal_bayar}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tanggal_bayar} == null ? "": $F{tanggal_bayar}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="30" width="800" height="1"/>
+				<reportElement x="0" y="30" width="800" height="1" />
 			</line>
 			<textField>
-				<reportElement x="402" y="5" width="133" height="20"/>
+				<reportElement x="402" y="5" width="133" height="20" />
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{metode_pembayaran}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="5" width="31" height="20"/>
+				<reportElement x="1" y="5" width="31" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
@@ -334,84 +334,84 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 	<summary>
 		<band height="210" splitType="Stretch">
 			<staticText>
-				<reportElement x="540" y="0" width="131" height="20"/>
+				<reportElement x="540" y="0" width="131" height="20" />
 				<textElement>
 					<font size="14" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Ammount Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="52" width="100" height="20"/>
+				<reportElement x="0" y="52" width="100" height="20" />
 				<textElement>
 					<font size="14" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Keterangan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="70" width="100" height="20"/>
+				<reportElement x="0" y="70" width="100" height="20" />
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<text><![CDATA[Description]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="101" y="52" width="441" height="20"/>
+				<reportElement x="101" y="52" width="441" height="20" />
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<text><![CDATA[Mohon setelah dicap & di tandatangani tanda terima ini di fax ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="101" y="71" width="441" height="20"/>
+				<reportElement x="101" y="71" width="441" height="20" />
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<text><![CDATA[PT. Sinyoung Abadi No. +6221-8752302]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="101" y="90" width="441" height="20"/>
+				<reportElement x="101" y="90" width="441" height="20" />
 				<textElement>
 					<font size="14" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Mohon cantumkan nama perusahaan / toko pada saat pembayaran]]></text>
 			</staticText>
 			<line>
-				<reportElement x="591" y="140" width="211" height="1"/>
+				<reportElement x="591" y="140" width="211" height="1" />
 			</line>
 			<staticText>
-				<reportElement x="591" y="142" width="211" height="20"/>
+				<reportElement x="591" y="142" width="211" height="20" />
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[SIGNATURE]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="590" y="34" width="58" height="20"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[BOGOR]]></text>
-			</staticText>
 			<textField pattern="dd MMMMM yyyy">
-				<reportElement x="671" y="34" width="129" height="20"/>
+				<reportElement x="671" y="34" width="129" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="671" y="0" width="129" height="20"/>
+			<textField pattern="Rp #,##0.00">
+				<reportElement x="671" y="0" width="129" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_bayar}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="591" y="120" width="209" height="20"/>
+				<reportElement x="591" y="120" width="209" height="20" />
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="591" y="32" width="74" height="20" />
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kota}+", "]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

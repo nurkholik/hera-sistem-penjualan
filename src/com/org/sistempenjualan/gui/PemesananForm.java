@@ -5,18 +5,23 @@
  */
 package com.org.sistempenjualan.gui;
 
+import com.org.sistempenjualan.DbConnect;
 import com.org.sistempenjualan.backup.DetailSuratJalanForm;
 import com.org.sistempenjualan.Utility;
 import com.org.sistempenjualan.dao.PemesananDao;
 import com.org.sistempenjualan.dao.impl.PemesananDaoImpl;
-import com.org.sistempenjualan.dao.impl.SuratJalanDaoImpl;
 import com.org.sistempenjualan.entity.Entity;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.io.File;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Box;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -49,12 +54,33 @@ public class PemesananForm extends javax.swing.JFrame {
         mbPemesanan.add(todayDate);
         mbPemesanan.add(userSession);
         util.tanggalSekarang(todayDate);
+        btnEdit.setEnabled(false);
+        btnCetakInvoice.setEnabled(false);
     }
     
     public void setupTable(){
         tblPemesanan.setModel(DbUtils.resultSetToTableModel(dao.setPemesananTable()));
         tblPemesanan.removeColumn(tblPemesanan.getColumnModel().getColumn(0));
         util.adjustColumn(tblPemesanan);
+    }
+    
+    public void cetakInvoice(String noPemesanan){
+        try {
+            String namaFile = "src"+File.separator+"com"+File.separator+"org"+File.separator+"sistempenjualan"+File.separator+"report"+File.separator+"invoice.jasper";
+            Connection conn = DbConnect.ConnectDb();
+
+            Map<String,Object> map =  new HashMap<String, Object>();
+            map.put("no_pemesanan", noPemesanan);
+            JasperPrint jprint = JasperFillManager.fillReport(namaFile.toString(), map, conn);
+            if(jprint.getPages().size() != 0){
+                JasperViewer.viewReport(jprint,false);
+            }else{
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan !");
+            }
+           
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
     }
 
     /**
@@ -71,13 +97,14 @@ public class PemesananForm extends javax.swing.JFrame {
         txtCariPemesanan = new javax.swing.JTextField();
         lblCariPemesanan = new javax.swing.JLabel();
         btnSuratBaru = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnCetakInvoice = new javax.swing.JButton();
         mbPemesanan = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btnLogOut = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        menuSupplier = new javax.swing.JMenu();
-        menuItem = new javax.swing.JMenuItem();
+        menuCustomer = new javax.swing.JMenuItem();
+        menuSuratJalan = new javax.swing.JMenuItem();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
 
@@ -128,27 +155,49 @@ public class PemesananForm extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("EDIT");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setText("EDIT");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        btnCetakInvoice.setText("CETAK INVOICE");
+        btnCetakInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakInvoiceActionPerformed(evt);
             }
         });
 
         jMenu1.setText("Server");
 
         btnLogOut.setText("Log Out");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
         jMenu1.add(btnLogOut);
 
         mbPemesanan.add(jMenu1);
 
         jMenu2.setText("Form");
 
-        menuSupplier.setText("Form Supplier");
-        jMenu2.add(menuSupplier);
+        menuCustomer.setText("Form Customer");
+        menuCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCustomerActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuCustomer);
 
-        menuItem.setText("Form Item");
-        jMenu2.add(menuItem);
+        menuSuratJalan.setText("Form Surat Jalan");
+        menuSuratJalan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSuratJalanActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuSuratJalan);
 
         mbPemesanan.add(jMenu2);
 
@@ -177,8 +226,10 @@ public class PemesananForm extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(txtCariPemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(479, 479, 479)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(414, 414, 414)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(btnCetakInvoice)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -192,7 +243,9 @@ public class PemesananForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEdit)
+                    .addComponent(btnCetakInvoice))
                 .addContainerGap(48, Short.MAX_VALUE))
         );
 
@@ -221,6 +274,8 @@ public class PemesananForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCariPemesananKeyReleased
 
     private void tblPemesananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPemesananMouseClicked
+        btnEdit.setEnabled(true);
+        btnCetakInvoice.setEnabled(true);
         int row = tblPemesanan.getSelectedRow();
         
         TableModel model = tblPemesanan.getModel();
@@ -231,23 +286,47 @@ public class PemesananForm extends javax.swing.JFrame {
         entity.setNoCustomer(model.getValueAt(row, 2).toString());
     }//GEN-LAST:event_tblPemesananMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         this.setVisible(false);
         new EditDetailPemesananForm(entity).setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void menuCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCustomerActionPerformed
+        this.setVisible(false);
+        new CustomerForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuCustomerActionPerformed
+
+    private void menuSuratJalanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSuratJalanActionPerformed
+        this.setVisible(false);
+        new SuratJalanForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuSuratJalanActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        this.setVisible(false);
+        new LoginForm().setVisible(true);
+    }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void btnCetakInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakInvoiceActionPerformed
+        if(entity.getNoPemesanan() != null){
+            cetakInvoice(entity.getNoPemesanan());
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Nomor Pemesanan");
+        }
+    }//GEN-LAST:event_btnCetakInvoiceActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCetakInvoice;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JMenuItem btnLogOut;
     private javax.swing.JButton btnSuratBaru;
-    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCariPemesanan;
     private javax.swing.JMenuBar mbPemesanan;
-    private javax.swing.JMenuItem menuItem;
-    private javax.swing.JMenu menuSupplier;
+    private javax.swing.JMenuItem menuCustomer;
+    private javax.swing.JMenuItem menuSuratJalan;
     private javax.swing.JTable tblPemesanan;
     private javax.swing.JMenu todayDate;
     private javax.swing.JTextField txtCariPemesanan;

@@ -197,5 +197,41 @@ public class PembayaranDaoImpl implements PembayaranDao{
         }
         return result;
     }
+
+    @Override
+    public ResultSet getReportBulanan(String tglAwal) {
+        ResultSet res = null;
+        try{
+          String sql = "SELECT a.id_transaksi, \n" +
+                        "a.id_pemesanan, \n" +
+                        "a.id_surat_jalan, \n" +
+                        "a.no_transaksi as 'No Transaksi', \n" +
+                        "b.no_pemesanan as 'No Pemesanan', \n" +
+                        "c.no_surat_jalan as 'No Surat Jalan', \n" +
+                        "a.metode_pembayaran as 'Metode Pembayaran', \n" +
+                        "a.jenis_pembayaran as 'Jenis Pembayaran', \n" +
+                        "DATE_FORMAT(a.tanggal_transaksi,'%d %M %Y') as 'Tanggal Transaksi', \n" +
+                        "DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', \n" +
+                        "a.total_bayar as 'Total Bayar', \n" +
+                        "a.yang_dibayar as 'Yang Dibayarkan', \n" +
+                        "a.selisih Selisih, \n" +
+                        "a.tanggal_entri as 'Tanggal Entri', \n" +
+                        "a.update_by NIK \n" +
+                        "FROM transaksi a \n" +
+                        "JOIN header_pemesanan b \n" +
+                        "ON a.id_pemesanan = b.id_pemesanan \n" +
+                        "LEFT JOIN surat_jalan c \n" +
+                        "ON b.id_pemesanan = c.id_pemesanan \n" +
+                        "WHERE DATE_FORMAT(a.tanggal_transaksi, '%M %Y') = DATE_FORMAT(?,'%M %Y')\n" +
+                        "ORDER BY a.no_transaksi DESC ";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, tglAwal);
+            res = pst.executeQuery();  
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
+        }
+        return res;
+    }
     
 }
+

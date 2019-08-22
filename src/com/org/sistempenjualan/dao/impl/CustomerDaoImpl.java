@@ -29,15 +29,15 @@ public class CustomerDaoImpl implements CustomerDao{
     public ResultSet setCustomerTable() {
         ResultSet res = null;
         try{
-            String sql = "SELECT a.id_customer, "
-                        + "a.no_customer as 'No Customer', "
+            String sql = "SELECT a.no_customer as 'No Customer', "
                         + "a.nama_customer as 'Nama Customer', "
                         + "a.alamat Alamat, "
                         + "a.kota Kota, "
                         + "a.no_telp as 'No Telepon', "
                         + "DATE_FORMAT(a.tanggal_system, '%d %M %Y %T') as 'Tanggal Entri', "
                         + "a.update_by NIK "
-                        + "FROM mst_customer a ";
+                        + "FROM mst_customer a "
+                        + "ORDER BY a.no_customer ASC ";
             pst = con.prepareStatement(sql);
             res = pst.executeQuery();
         } catch (SQLException | HeadlessException e){
@@ -50,8 +50,7 @@ public class CustomerDaoImpl implements CustomerDao{
     public ResultSet getCustomerByParam(String param) {
         ResultSet res = null;
         try{
-            String sql = "SELECT a.id_customer, "
-                        + "a.no_customer as 'No Customer', "
+            String sql = "SELECT a.no_customer as 'No Customer', "
                         + "a.nama_customer as 'Nama Customer', "
                         + "a.alamat Alamat, "
                         + "a.kota Kota, "
@@ -63,7 +62,8 @@ public class CustomerDaoImpl implements CustomerDao{
                         + "OR a.nama_customer LIKE ? "
                         + "OR a.alamat LIKE ? "
                         + "OR a.kota LIKE ? "
-                        + "OR a.no_telp LIKE ? ";
+                        + "OR a.no_telp LIKE ? "
+                        + "ORDER BY a.no_customer ASC ";
             pst = con.prepareStatement(sql);
             pst.setString(1, "%"+param+"%");
             pst.setString(2, "%"+param+"%");
@@ -110,14 +110,14 @@ public class CustomerDaoImpl implements CustomerDao{
                         + "a.no_telp = ?, "
                         + "a.tanggal_system = DATE_FORMAT(NOW(),'%Y-%m-%d %T'), "
                         + "a.update_by = ? "
-                        + "WHERE a.id_customer = ? ";
+                        + "WHERE a.no_customer = ? ";
             pst = con.prepareStatement(sql);
             pst.setString(1, entity.getNamaCustomer());
             pst.setString(2, entity.getAlamatCustomer());
             pst.setString(3, entity.getKotaCustomer());
             pst.setString(4, entity.getTlpCustomer());
             pst.setString(5, entity.getNikSession());
-            pst.setInt(6, entity.getIdCustomer());
+            pst.setString(6, entity.getNoCustomer());
             pst.executeUpdate();
             result = true;
         } catch (SQLException | HeadlessException e){
@@ -128,12 +128,12 @@ public class CustomerDaoImpl implements CustomerDao{
     }
 
     @Override
-    public boolean deleteCustomer(int idCustomer) {
+    public boolean deleteCustomer(String noCustomer) {
         boolean result = false;
         try{
-            String sql = "DELETE FROM mst_customer WHERE id_customer = ?";
+            String sql = "DELETE FROM mst_customer WHERE no_customer = ?";
             pst = con.prepareStatement(sql);
-            pst.setInt(1, idCustomer);
+            pst.setString(1, noCustomer);
             pst.execute();
             result = true;
         } catch (SQLException | HeadlessException e){

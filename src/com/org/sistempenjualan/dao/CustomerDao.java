@@ -19,7 +19,7 @@ public interface CustomerDao {
     public ResultSet getCustomerByParam(String param);
     public boolean addCustomer(Entity entity);
     public boolean editCustomer(Entity entity);
-    public boolean deleteCustomer(int idCustomer);
+    public boolean deleteCustomer(String noCustomer);
     public String getLastNoCustomer();
     
     // Form Pemesanan Baru

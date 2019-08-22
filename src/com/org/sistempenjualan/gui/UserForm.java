@@ -124,7 +124,7 @@ public class UserForm extends javax.swing.JFrame {
         lblRoleUser.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblRoleUser.setText("Role User");
 
-        cbRoleUser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Pilih Role --", "Admin", "Inventory", "Kasir", "Kurir" }));
+        cbRoleUser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Pilih Role --", "Admin", "Inventory", "Kasir", "Kurir", "Registrasi" }));
 
         btnNikBaru.setText("Baru");
         btnNikBaru.addActionListener(new java.awt.event.ActionListener() {

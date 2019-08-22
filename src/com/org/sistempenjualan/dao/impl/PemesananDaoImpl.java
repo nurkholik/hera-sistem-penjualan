@@ -35,7 +35,7 @@ public class PemesananDaoImpl implements PemesananDao {
                         + "DATE_FORMAT(a.tanggal_pemesanan, '%d %M %Y') as 'Tanggal Pemesanan', "
                         + "a.update_by NIK "
                         + "FROM header_pemesanan a "
-                        + "ORDER BY a.no_pemesanan ASC ";
+                        + "ORDER BY a.no_pemesanan DESC ";
             pst = con.prepareStatement(sql);
             res = pst.executeQuery();
         } catch (SQLException | HeadlessException e){
@@ -56,7 +56,7 @@ public class PemesananDaoImpl implements PemesananDao {
                         + "FROM header_pemesanan a "
                         + "WHERE (a.no_pemesanan LIKE ? "
                         + "OR a.no_customer LIKE ?) "
-                        + "ORDER BY a.no_pemesanan ASC ";
+                        + "ORDER BY a.no_pemesanan DESC ";
             pst = con.prepareStatement(sql);
             pst.setString(1, "%"+param+"%");
             pst.setString(2, "%"+param+"%");

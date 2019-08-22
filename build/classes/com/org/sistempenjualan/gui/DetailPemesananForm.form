@@ -4,30 +4,6 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="mbPemesanan">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="btnLogOut">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Server"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Log Out"/>
-              </Properties>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu2">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Form"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Form Surat Jalan"/>
-              </Properties>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
         <Menu class="javax.swing.JMenu" name="todayDate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Date"/>
@@ -103,7 +79,7 @@
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="btnHapus" min="-2" pref="83" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="btnHapus1" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <Component id="btnSelesai" min="-2" pref="83" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="btnReset" min="-2" pref="86" max="-2" attributes="0"/>
                               </Group>
@@ -149,11 +125,13 @@
                   </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnSimpan" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="btnReset" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnHapus" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnHapus1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btnSimpan" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnHapus" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSelesai" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace pref="50" max="32767" attributes="0"/>
           </Group>
@@ -287,12 +265,12 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnHapus1">
+    <Component class="javax.swing.JButton" name="btnSelesai">
       <Properties>
         <Property name="text" type="java.lang.String" value="SELESAI"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHapus1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSelesaiActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

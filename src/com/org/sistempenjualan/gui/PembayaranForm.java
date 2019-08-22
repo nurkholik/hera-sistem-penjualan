@@ -5,6 +5,7 @@
  */
 package com.org.sistempenjualan.gui;
 
+import com.org.sistempenjualan.DbConnect;
 import com.org.sistempenjualan.Utility;
 import com.org.sistempenjualan.dao.PembayaranDao;
 import com.org.sistempenjualan.dao.PemesananDao;
@@ -15,16 +16,23 @@ import com.org.sistempenjualan.dao.impl.PemesananDaoImpl;
 import com.org.sistempenjualan.dao.impl.SuratJalanDaoImpl;
 import com.org.sistempenjualan.dao.impl.UserDaoImpl;
 import com.org.sistempenjualan.entity.Entity;
+import java.io.File;
+import java.sql.Connection;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -52,8 +60,9 @@ public class PembayaranForm extends javax.swing.JFrame {
     public PembayaranForm(Entity a) {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        
         this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+        this.setExtendedState(this.getExtendedState() | this.MAXIMIZED_BOTH);
         nikSession = a.getNikSession();
         userSession.setText("Login As: "+a.getUserSession());
         entity.setNikSession(nikSession);
@@ -75,6 +84,10 @@ public class PembayaranForm extends javax.swing.JFrame {
         //generateNoPembayaran();
         getListPemesanan();
         clearForm();
+        txtTglTransaksi.getCalendar();
+        txtTglTransaksi.setMinSelectableDate(new Date());
+        txtTglBayar.getCalendar();
+        txtTglBayar.setMinSelectableDate(new Date());
     }
     
     public void setupTable(){
@@ -149,6 +162,25 @@ public class PembayaranForm extends javax.swing.JFrame {
     public void getListPemesanan(){
         cbPemesanan.setModel(new DefaultComboBoxModel(psnDao.getAllNoPemesanan()));
     }
+    
+    public void cetakResep(String noTransaksi){
+        try {
+            String namaFile = "src"+File.separator+"com"+File.separator+"org"+File.separator+"sistempenjualan"+File.separator+"report"+File.separator+"TandaTerima.jasper";
+            Connection conn = DbConnect.ConnectDb();
+
+            Map<String,Object> map =  new HashMap<String, Object>();
+            map.put("no_transaksi", noTransaksi);
+            JasperPrint jprint = JasperFillManager.fillReport(namaFile.toString(), map, conn);
+            if(jprint.getPages().size() != 0){
+                JasperViewer.viewReport(jprint,false);
+            }else{
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan !");
+            }
+           
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -189,10 +221,12 @@ public class PembayaranForm extends javax.swing.JFrame {
         txtYangDibayar = new javax.swing.JTextField();
         cbPemesanan = new javax.swing.JComboBox();
         txtNoSuratJalan = new javax.swing.JTextField();
+        btnCetakResep = new javax.swing.JButton();
         mbPembayaran = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        btnLogOut = new javax.swing.JMenu();
+        btnLogOut = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
 
@@ -336,14 +370,40 @@ public class PembayaranForm extends javax.swing.JFrame {
             }
         });
 
+        btnCetakResep.setText("CETAK");
+        btnCetakResep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakResepActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Server");
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
 
         btnLogOut.setText("Log Out");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
         jMenu1.add(btnLogOut);
 
         mbPembayaran.add(jMenu1);
 
         jMenu2.setText("Form");
+
+        jMenuItem1.setText("Form Report");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
         mbPembayaran.add(jMenu2);
 
         todayDate.setText("Date");
@@ -372,43 +432,47 @@ public class PembayaranForm extends javax.swing.JFrame {
                                 .addComponent(btnBaru))
                             .addComponent(jLabel8)
                             .addComponent(cbPemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(63, 63, 63)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(cbJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(cbMetodePembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(47, 47, 47)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel5)
-                                .addComponent(txtTglBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4)
-                                .addComponent(txtTglTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(63, 63, 63)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(cbJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(cbMetodePembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txtTglBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(txtTglTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(73, 73, 73)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel12)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel9)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel11)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtSelisih, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel13)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel14)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtYangDibayar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(155, 155, 155)
                                 .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(73, 73, 73)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel12)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel9)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtSelisih, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel13)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel14)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtYangDibayar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCetakResep, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(lblCariPembayaran)
@@ -433,47 +497,40 @@ public class PembayaranForm extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(39, 39, 39)
-                                                .addComponent(jLabel12))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel7)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(txtTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel13)
-                                        .addGap(10, 10, 10)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(txtYangDibayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel14))
-                                        .addGap(10, 10, 10)
-                                        .addComponent(jLabel9))
+                                        .addGap(39, 39, 39)
+                                        .addComponent(jLabel12))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtTglTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel5)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtTglBayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel13)
                                 .addGap(10, 10, 10)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtSelisih, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel11)))
+                                    .addComponent(txtYangDibayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14))
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel9))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
+                                .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbMetodePembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtTglTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel3)
+                                .addComponent(jLabel5)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                                .addComponent(txtTglBayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnSimpan)
-                            .addComponent(btnReset))
-                        .addGap(37, 37, 37))
+                            .addComponent(txtSelisih, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbMetodePembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -489,8 +546,13 @@ public class PembayaranForm extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(txtNoSuratJalan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnSimpan)
+                                .addComponent(btnReset)
+                                .addComponent(btnCetakResep))
+                            .addComponent(txtNoSuratJalan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -509,6 +571,8 @@ public class PembayaranForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTotalBayarActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        getListPemesanan();
+        cbPemesanan.setEnabled(true);
         clearForm();
     }//GEN-LAST:event_btnResetActionPerformed
 
@@ -649,7 +713,12 @@ public class PembayaranForm extends javax.swing.JFrame {
             txtNoTransaksi.setText("");
         }
         if(model.getValueAt(row, 4) != null){
-            cbPemesanan.setSelectedItem(model.getValueAt(row, 4).toString());
+            Vector vector = new Vector();
+            vector.add(model.getValueAt(row, 4).toString());
+            cbPemesanan.setModel(new DefaultComboBoxModel(vector));
+            cbPemesanan.setEnabled(false);
+            vector.clear();
+            
         }else{
             cbPemesanan.setSelectedIndex(0);
         }
@@ -711,13 +780,37 @@ public class PembayaranForm extends javax.swing.JFrame {
         util.adjustColumn(tblPembayaran);
     }//GEN-LAST:event_txtCariNoPembayaranKeyReleased
 
+    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu1ActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        this.setVisible(false);
+        new LoginForm().setVisible(true);
+    }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void btnCetakResepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakResepActionPerformed
+        String noTransaksi = txtNoTransaksi.getText();
+        if(!noTransaksi.equals("")){
+            cetakResep(noTransaksi);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Nomor Transaksi!");
+        }  
+    }//GEN-LAST:event_btnCetakResepActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        this.setVisible(false);
+        new ReportBulananForm(entity).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBaru;
-    private javax.swing.JMenu btnLogOut;
+    private javax.swing.JButton btnCetakResep;
+    private javax.swing.JMenuItem btnLogOut;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox cbJenisPembayaran;
@@ -738,6 +831,7 @@ public class PembayaranForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCariPembayaran;
     private javax.swing.JMenuBar mbPembayaran;

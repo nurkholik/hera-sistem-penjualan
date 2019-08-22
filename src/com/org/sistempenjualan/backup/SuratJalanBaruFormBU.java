@@ -11,7 +11,6 @@ import com.org.sistempenjualan.dao.SuratJalanDao;
 import com.org.sistempenjualan.dao.impl.CustomerDaoImpl;
 import com.org.sistempenjualan.dao.impl.SuratJalanDaoImpl;
 import com.org.sistempenjualan.entity.Entity;
-import com.org.sistempenjualan.gui.CariPengirimForm;
 import com.org.sistempenjualan.gui.LoginForm;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -285,7 +284,7 @@ public class SuratJalanBaruFormBU extends javax.swing.JFrame {
 
     private void btnCariPengirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariPengirimActionPerformed
         this.setVisible(false);
-        new CariPengirimForm(entity).setVisible(true);
+        new CariPengirimFormBU(entity).setVisible(true);
     }//GEN-LAST:event_btnCariPengirimActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed

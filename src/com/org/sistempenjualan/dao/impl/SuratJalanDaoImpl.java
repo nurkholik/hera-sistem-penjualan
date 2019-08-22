@@ -152,7 +152,7 @@ public class SuratJalanDaoImpl implements SuratJalanDao{
             pst.execute();
             result = true;
         } catch (SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null,"Error Membuat Surat Jalan ("+e.toString()+")");
+            JOptionPane.showMessageDialog(null,"Error Cancel Surat Jalan ("+e.toString()+")");
         }
         
         return result;
@@ -174,9 +174,31 @@ public class SuratJalanDaoImpl implements SuratJalanDao{
                 map.put("noSuratJalan", rs.getString(2));
             }
         } catch (SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null,"Error Membuat Surat Jalan ("+e.toString()+")");
+            JOptionPane.showMessageDialog(null,"Error Get Nomor Surat Jalan ("+e.toString()+")");
         }
         
         return map;
+    }
+
+    @Override
+    public boolean editSuratJalan(Entity entity) {
+        boolean result = false;
+        
+        try{
+            String sql = "UPDATE surat_jalan a "
+                    + "SET a.nik_pengirim = ?, "
+                    + "a.tanggal_pengiriman = STR_TO_DATE(?,'%d %M %Y') "
+                    + "WHERE a.no_surat_jalan = ? ";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, entity.getNikPengirim());
+            pst.setString(2, entity.getTanggalPengiriman());
+            pst.setString(3, entity.getNoSuratJalan());
+            pst.executeUpdate();
+            result = true;
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error Membuat Surat Jalan ("+e.toString()+")");
+        }
+        
+        return result;
     }
 }

@@ -5,17 +5,81 @@
  */
 package com.org.sistempenjualan.gui;
 
+import com.org.sistempenjualan.DbConnect;
+import com.org.sistempenjualan.Utility;
+import com.org.sistempenjualan.dao.PembayaranDao;
+import com.org.sistempenjualan.dao.impl.PembayaranDaoImpl;
+import com.org.sistempenjualan.entity.Entity;
+import java.io.File;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.Box;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+
 /**
  *
  * @author DIOR
  */
 public class ReportBulananForm extends javax.swing.JFrame {
-
-    /**
-     * Creates new form ReportBulananForm
-     */
-    public ReportBulananForm() {
+    // Global Objek
+    Entity entity = new Entity();
+    Utility util = new Utility();
+    PembayaranDao dao = new PembayaranDaoImpl();
+    
+    // Global Variabel
+    String nikSession = "";
+    int idPemesanan = 0;
+    int idSuratJalan = 0;
+    boolean flagUpdate = false;
+    
+    public ReportBulananForm(Entity a) {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+        nikSession = a.getNikSession();
+        userSession.setText("Login As: "+a.getUserSession());
+        entity.setNikSession(nikSession);
+        entity.setUserSession(a.getUserSession());
+        entity.setRoleSession(a.getRoleSession());
+        mbReportBulanan.add(Box.createHorizontalGlue());
+        mbReportBulanan.add(todayDate);
+        mbReportBulanan.add(userSession);
+        util.tanggalSekarang(todayDate);
+        setupTable();
+    }
+    
+    public void cetakReport(String tglReport){
+        try {
+            String namaFile = "src"+File.separator+"com"+File.separator+"org"+File.separator+"sistempenjualan"+File.separator+"report"+File.separator+"ReportBulanan.jasper";
+            Connection conn = DbConnect.ConnectDb();
+
+            Map<String,Object> map =  new HashMap<String, Object>();
+            map.put("periode", tglReport);
+            JasperPrint jprint = JasperFillManager.fillReport(namaFile.toString(), map, conn);
+            if(jprint.getPages().size() != 0){
+                JasperViewer.viewReport(jprint,false);
+            }else{
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan !");
+            }
+           
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+    
+    public void setupTable(){
+            tblReport.setModel(DbUtils.resultSetToTableModel(dao.getReportBulanan("")));
+            tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
+            tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
+            tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
+            util.adjustColumn(tblReport);
     }
 
     /**
@@ -27,19 +91,30 @@ public class ReportBulananForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
-        jLabel3 = new javax.swing.JLabel();
+        txtTglReport = new com.toedter.calendar.JDateChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblReport = new javax.swing.JTable();
+        btnCari = new javax.swing.JButton();
+        btnCetak = new javax.swing.JButton();
+        mbReportBulanan = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        btnLogOut = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        todayDate = new javax.swing.JMenu();
+        userSession = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Form Report Bulanan");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel3.setText("Sampai");
+        txtTglReport.setDateFormatString("yyyy-MM-dd");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblReport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -50,7 +125,53 @@ public class ReportBulananForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblReport);
+
+        btnCari.setText("CARI");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
+
+        btnCetak.setText("CETAK");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
+
+        jMenu1.setText("File");
+
+        btnLogOut.setText("Log Out");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnLogOut);
+
+        mbReportBulanan.add(jMenu1);
+
+        jMenu2.setText("Form");
+
+        jMenuItem1.setText("Form Pembayaran");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        mbReportBulanan.add(jMenu2);
+
+        todayDate.setText("Date");
+        mbReportBulanan.add(todayDate);
+
+        userSession.setText("User");
+        mbReportBulanan.add(userSession);
+
+        setJMenuBar(mbReportBulanan);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,69 +182,85 @@ public class ReportBulananForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1070, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel3)
+                        .addComponent(txtTglReport, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(76, 76, 76)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(47, 47, 47)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTglReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCari)
+                        .addComponent(btnCetak)))
+                .addGap(44, 44, 44)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ReportBulananForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ReportBulananForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ReportBulananForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ReportBulananForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        this.setVisible(false);
+        new LoginForm().setVisible(true);
+    }//GEN-LAST:event_btnLogOutActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ReportBulananForm().setVisible(true);
-            }
-        });
-    }
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        this.setVisible(false);
+        new PembayaranForm(entity).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        String param = ((JTextField)txtTglReport.getDateEditor().getUiComponent()).getText();
+        if(!param.equals("")){
+            tblReport.setModel(DbUtils.resultSetToTableModel(dao.getReportBulanan(param)));
+            tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
+            tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
+            tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
+            util.adjustColumn(tblReport);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Tanggal Terlebih Dulu!");
+        }
+    }//GEN-LAST:event_btnCariActionPerformed
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        String tanggal = ((JTextField)txtTglReport.getDateEditor().getUiComponent()).getText();
+        if(!tanggal.equals("")){
+            cetakReport(tanggal);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Tanggal Terlebih Dulu!");
+        }
+    }//GEN-LAST:event_btnCetakActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (JOptionPane.showConfirmDialog(this, 
+            "Apakah anda yakin ingin menutup form?", "Tutup Form", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton btnCari;
+    private javax.swing.JButton btnCetak;
+    private javax.swing.JMenuItem btnLogOut;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JMenuBar mbReportBulanan;
+    private javax.swing.JTable tblReport;
+    private javax.swing.JMenu todayDate;
+    private com.toedter.calendar.JDateChooser txtTglReport;
+    private javax.swing.JMenu userSession;
     // End of variables declaration//GEN-END:variables
 }

@@ -21,6 +21,7 @@ public interface SuratJalanDao {
     public boolean createSuratJalan(Entity entity);
     public boolean cancelSuratJalan(int idSuratJalan);
     public int getIdSuratJalan(String noSuratJalan);
+    public boolean editSuratJalan(Entity entity);
     
     // Form Pembayaran
     public Map<String, Object> getNoSuratJalan(String noPemesanan);

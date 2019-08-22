@@ -24,12 +24,20 @@
             <Property name="text" type="java.lang.String" value="Form"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuSupplier">
+            <MenuItem class="javax.swing.JMenuItem" name="menuPemesanan">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Form Supplier"/>
+                <Property name="text" type="java.lang.String" value="Form Pemesanan"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSupplierActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuPemesananActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuSuratJalan">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Form Surat Jalan"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSuratJalanActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

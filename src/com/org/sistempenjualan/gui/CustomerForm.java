@@ -34,7 +34,6 @@ public class CustomerForm extends javax.swing.JFrame {
     // Global Variabel
     boolean flagUpdate = false;
     String nikSession = "";
-    int idCustomer;
     
     public CustomerForm(Entity a) {
         initComponents();
@@ -55,14 +54,13 @@ public class CustomerForm extends javax.swing.JFrame {
         mbCustomer.add(userSession);
         util.tanggalSekarang(todayDate);
         txtNoCustomer.setEditable(false);
-        btnHapus.setEnabled(true);
+        btnHapus.setEnabled(false);
         setupTable();
         clearForm();
     }
     
     public void setupTable(){
         tblCustomer.setModel(DbUtils.resultSetToTableModel(dao.setCustomerTable()));
-        tblCustomer.removeColumn(tblCustomer.getColumnModel().getColumn(0));
         util.adjustColumn(tblCustomer);
     }
     
@@ -109,7 +107,8 @@ public class CustomerForm extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         btnLogOut = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        menuSupplier = new javax.swing.JMenuItem();
+        menuPemesanan = new javax.swing.JMenuItem();
+        menuSuratJalan = new javax.swing.JMenuItem();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
 
@@ -208,13 +207,21 @@ public class CustomerForm extends javax.swing.JFrame {
 
         jMenu2.setText("Form");
 
-        menuSupplier.setText("Form Supplier");
-        menuSupplier.addActionListener(new java.awt.event.ActionListener() {
+        menuPemesanan.setText("Form Pemesanan");
+        menuPemesanan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuSupplierActionPerformed(evt);
+                menuPemesananActionPerformed(evt);
             }
         });
-        jMenu2.add(menuSupplier);
+        jMenu2.add(menuPemesanan);
+
+        menuSuratJalan.setText("Form Surat Jalan");
+        menuSuratJalan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSuratJalanActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuSuratJalan);
 
         mbCustomer.add(jMenu2);
 
@@ -342,10 +349,12 @@ public class CustomerForm extends javax.swing.JFrame {
             txtAlamat.setText("");
             txtKota.setText("");
             txtNoTelp.setText("");
+            btnHapus.setEnabled(false);
         }else{
             flagUpdate = true;
             btnCustBaru.setText("Baru");
             txtNoCustomer.setText("");
+            btnHapus.setEnabled(true);
         }
     }//GEN-LAST:event_btnCustBaruActionPerformed
 
@@ -353,34 +362,40 @@ public class CustomerForm extends javax.swing.JFrame {
         boolean result = false;
         int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
         try{
-            if(confirm==0){
-                if(!flagUpdate){
-                    entity.setNoCustomer(txtNoCustomer.getText());
-                    entity.setNamaCustomer(txtNamaCustomer.getText());
-                    entity.setAlamatCustomer(txtAlamat.getText());
-                    entity.setKotaCustomer(txtKota.getText());
-                    entity.setTlpCustomer(txtNoTelp.getText());
-                    entity.setUserSession(nikSession);
-                    result = dao.addCustomer(entity);
-                    if(result){
-                        JOptionPane.showMessageDialog(rootPane,"Data Berhasil disimpan!");
-                        clearForm();
+            if(txtNamaCustomer.getText().equals("")){
+                JOptionPane.showMessageDialog(rootPane, "Nama Tidak Boleh Kosong!");
+            }else if(txtAlamat.getText().equals("")){
+                JOptionPane.showMessageDialog(rootPane, "Alamat Tidak Boleh Kosong!");
+            }else{
+                if(confirm==0){
+                    if(!flagUpdate){
+                        entity.setNoCustomer(txtNoCustomer.getText());
+                        entity.setNamaCustomer(txtNamaCustomer.getText());
+                        entity.setAlamatCustomer(txtAlamat.getText());
+                        entity.setKotaCustomer(txtKota.getText());
+                        entity.setTlpCustomer(txtNoTelp.getText());
+                        entity.setNikSession(nikSession);
+                        result = dao.addCustomer(entity);
+                        if(result){
+                            JOptionPane.showMessageDialog(rootPane,"Data Berhasil disimpan!");
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane,"Error Simpan Customer");
+                        }
                     }else{
-                        JOptionPane.showMessageDialog(rootPane,"Error Simpan Customer");
-                    }
-                }else{
-                    entity.setNamaCustomer(txtNamaCustomer.getText());
-                    entity.setAlamatCustomer(txtAlamat.getText());
-                    entity.setKotaCustomer(txtKota.getText());
-                    entity.setTlpCustomer(txtNoTelp.getText());
-                    entity.setUserSession(nikSession);
-                    entity.setIdCustomer(idCustomer);
-                    result = dao.editCustomer(entity);
-                    if(result){
-                        JOptionPane.showMessageDialog(rootPane,"Data Berhasil diupdate!");
-                        clearForm();
-                    }else{
-                        JOptionPane.showMessageDialog(rootPane,"Error Update Customer");
+                        entity.setNamaCustomer(txtNamaCustomer.getText());
+                        entity.setAlamatCustomer(txtAlamat.getText());
+                        entity.setKotaCustomer(txtKota.getText());
+                        entity.setTlpCustomer(txtNoTelp.getText());
+                        entity.setNikSession(nikSession);
+                        entity.setNoCustomer(txtNoCustomer.getText());
+                        result = dao.editCustomer(entity);
+                        if(result){
+                            JOptionPane.showMessageDialog(rootPane,"Data Berhasil diupdate!");
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane,"Error Update Customer");
+                        }
                     }
                 }
             }
@@ -398,7 +413,7 @@ public class CustomerForm extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menghapus data?","Hapus Data",JOptionPane.YES_NO_OPTION);
         try{
             if(confirm==0){
-                result = dao.deleteCustomer(idCustomer);
+                result = dao.deleteCustomer(txtNoCustomer.getText());
                 if(result){
                     JOptionPane.showMessageDialog(rootPane,"Data Berhasil dihapus!");
                     clearForm();
@@ -422,12 +437,11 @@ public class CustomerForm extends javax.swing.JFrame {
         
         TableModel model = tblCustomer.getModel();
         
-        idCustomer = Integer.parseInt(model.getValueAt(row, 0).toString());
-        txtNoCustomer.setText(model.getValueAt(row, 1).toString());
-        txtNamaCustomer.setText(model.getValueAt(row, 2).toString());
-        txtAlamat.setText(model.getValueAt(row, 3).toString());
-        txtKota.setText(model.getValueAt(row, 4).toString());
-        txtNoTelp.setText(model.getValueAt(row, 5).toString());
+        txtNoCustomer.setText(model.getValueAt(row, 0).toString());
+        txtNamaCustomer.setText(model.getValueAt(row, 1).toString());
+        txtAlamat.setText(model.getValueAt(row, 2).toString());
+        txtKota.setText(model.getValueAt(row, 3).toString());
+        txtNoTelp.setText(model.getValueAt(row, 4).toString());
         btnHapus.setEnabled(true);
     }//GEN-LAST:event_tblCustomerMouseClicked
 
@@ -442,10 +456,10 @@ public class CustomerForm extends javax.swing.JFrame {
         util.adjustColumn(tblCustomer);
     }//GEN-LAST:event_txtCariCustKeyReleased
 
-    private void menuSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSupplierActionPerformed
+    private void menuSuratJalanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSuratJalanActionPerformed
         this.setVisible(false);
-        new SupplierForm(entity).setVisible(true);
-    }//GEN-LAST:event_menuSupplierActionPerformed
+        new SuratJalanForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuSuratJalanActionPerformed
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         this.setVisible(false);
@@ -460,6 +474,11 @@ public class CustomerForm extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void menuPemesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPemesananActionPerformed
+        this.setVisible(false);
+        new PemesananForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuPemesananActionPerformed
 
     
 
@@ -480,7 +499,8 @@ public class CustomerForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblNoCustomer;
     private javax.swing.JLabel lblNoTelp;
     private javax.swing.JMenuBar mbCustomer;
-    private javax.swing.JMenuItem menuSupplier;
+    private javax.swing.JMenuItem menuPemesanan;
+    private javax.swing.JMenuItem menuSuratJalan;
     private javax.swing.JTable tblCustomer;
     private javax.swing.JMenu todayDate;
     private javax.swing.JTextArea txtAlamat;

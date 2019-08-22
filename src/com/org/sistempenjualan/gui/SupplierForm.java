@@ -107,13 +107,12 @@ public class SupplierForm extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         btnLogOut = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        menuUser = new javax.swing.JMenuItem();
+        menuBarang = new javax.swing.JMenuItem();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Form Supplier");
-        setPreferredSize(new java.awt.Dimension(1207, 659));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -221,13 +220,13 @@ public class SupplierForm extends javax.swing.JFrame {
 
         jMenu2.setText("Form");
 
-        menuUser.setText("Form User");
-        menuUser.addActionListener(new java.awt.event.ActionListener() {
+        menuBarang.setText("Form Barang");
+        menuBarang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuUserActionPerformed(evt);
+                menuBarangActionPerformed(evt);
             }
         });
-        jMenu2.add(menuUser);
+        jMenu2.add(menuBarang);
 
         mbSupplier.add(jMenu2);
 
@@ -357,10 +356,10 @@ public class SupplierForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSupplierBaruActionPerformed
 
-    private void menuUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUserActionPerformed
+    private void menuBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBarangActionPerformed
         this.setVisible(false);
-        new UserForm(entity).setVisible(true);
-    }//GEN-LAST:event_menuUserActionPerformed
+        new BarangForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuBarangActionPerformed
 
     private void btnSimpanSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanSupplierActionPerformed
         boolean result = false;
@@ -503,7 +502,7 @@ public class SupplierForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblNamaSupplier;
     private javax.swing.JLabel lblNoTelp;
     private javax.swing.JMenuBar mbSupplier;
-    private javax.swing.JMenuItem menuUser;
+    private javax.swing.JMenuItem menuBarang;
     private javax.swing.JTable tblSupplier;
     private javax.swing.JMenu todayDate;
     private javax.swing.JTextArea txtAlamat;

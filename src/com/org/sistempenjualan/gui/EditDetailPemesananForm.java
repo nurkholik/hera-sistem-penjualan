@@ -55,7 +55,6 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
         entity.setRoleSession(a.getRoleSession());
         // untuk kebutuhan form ini saja
         idPemesanan = a.getIdPemesanan();
-        JOptionPane.showMessageDialog(null,"idPemesanan:"+idPemesanan);
         entity.setIdPemesanan(a.getIdPemesanan());
         entity.setNoPemesanan(a.getNoPemesanan());
         entity.setNoCustomer(a.getNoCustomer());
@@ -75,8 +74,8 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
     public void setupTable(){
         tblPemesanan.setModel(DbUtils.resultSetToTableModel(dao.setDetailPemesananTable(idPemesanan)));
         tblPemesanan.removeColumn(tblPemesanan.getColumnModel().getColumn(0));
-        tblPemesanan.removeColumn(tblPemesanan.getColumnModel().getColumn(1));
-        tblPemesanan.removeColumn(tblPemesanan.getColumnModel().getColumn(2));
+        tblPemesanan.removeColumn(tblPemesanan.getColumnModel().getColumn(0));
+        tblPemesanan.removeColumn(tblPemesanan.getColumnModel().getColumn(0));
         util.adjustColumn(tblPemesanan);
     }
     
@@ -120,8 +119,6 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
         mbPemesanan = new javax.swing.JMenuBar();
         btnLogOut = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
 
@@ -211,16 +208,14 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
         btnLogOut.setText("Server");
 
         jMenuItem2.setText("Log Out");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         btnLogOut.add(jMenuItem2);
 
         mbPemesanan.add(btnLogOut);
-
-        jMenu2.setText("Form");
-
-        jMenuItem1.setText("Form Surat Jalan");
-        jMenu2.add(jMenuItem1);
-
-        mbPemesanan.add(jMenu2);
 
         todayDate.setText("Date");
         mbPemesanan.add(todayDate);
@@ -342,29 +337,34 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
         boolean resultUpdateBrg = false;
         try{
             stok = brgDao.getLastStok(namaBarang);
-            if(stok - jumlah < 0){
-                JOptionPane.showMessageDialog(null,"Stok "+barang+" hanya ada "+stok+", tidak bisa menambah barang!");
+            if(cbBarang.getSelectedIndex() == 0){
+                JOptionPane.showMessageDialog(rootPane,"Harus Pilih Barang Terlebih Dulu!");
+            }else if(stok - jumlah < 0){
+                JOptionPane.showMessageDialog(rootPane,"Stok "+barang+" hanya ada "+stok+", tidak bisa menambah barang!");
             }else{
-                entity.setKodeBarang(kodeBarang);
-                entity.setJumlahBarang(jumlah);
-                entity.setKeteranganPemesanan(keterangan);
-                result = dao.createDetailPemesanan(entity);
-                if(result){
-                    resultUpdateJumlah = dao.tambahJumlahPemesanan(idPemesanan, jumlah);
-                    if(resultUpdateJumlah){
-                        resultUpdateBrg = brgDao.updateStokBarang(kodeBarang, jumlah);
-                        if(resultUpdateBrg){
-                            JOptionPane.showMessageDialog(null,"Berhasil tambah barang");
-                            setupTable();
-                            clearForm();
+                int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
+                if(confirm==0){
+                    entity.setKodeBarang(kodeBarang);
+                    entity.setJumlahBarang(jumlah);
+                    entity.setKeteranganPemesanan(keterangan);
+                    result = dao.createDetailPemesanan(entity);
+                    if(result){
+                        resultUpdateJumlah = dao.tambahJumlahPemesanan(idPemesanan, jumlah);
+                        if(resultUpdateJumlah){
+                            resultUpdateBrg = brgDao.updateStokBarang(kodeBarang, jumlah);
+                            if(resultUpdateBrg){
+                                JOptionPane.showMessageDialog(null,"Berhasil tambah barang");
+                                setupTable();
+                                clearForm();
+                            }else{
+                                JOptionPane.showMessageDialog(null,"Gagal tambah barang");
+                            }
                         }else{
                             JOptionPane.showMessageDialog(null,"Gagal tambah barang");
                         }
                     }else{
                         JOptionPane.showMessageDialog(null,"Gagal tambah barang");
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null,"Gagal tambah barang");
                 }
             }
         }catch(Exception e){
@@ -395,22 +395,26 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
         boolean resultUpdateBrg = false;
         int jumlah = Integer.parseInt(txtJmlBarang.getText());
         try{
-            resultUpdateBrg = brgDao.returnStokBarang(entity.getKodeBarang(), jumlah);
-            if(resultUpdateBrg){
-                resultUpdateJumlah = dao.kurangJumlahPemesanan(idPemesanan, jumlah);
-                if(resultUpdateJumlah){
-                    result = dao.deleteDetailPemesanan(entity.getIdDetailPemesanan());
-                    if(result){
-                        JOptionPane.showMessageDialog(null,"Berhasil hapus barang");
-                        setupTable();
+            int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menghapus data?","Hapus Data",JOptionPane.YES_NO_OPTION);
+            if(confirm==0){
+                resultUpdateBrg = brgDao.returnStokBarang(entity.getKodeBarang(), jumlah);
+                if(resultUpdateBrg){
+                    resultUpdateJumlah = dao.kurangJumlahPemesanan(idPemesanan, jumlah);
+                    if(resultUpdateJumlah){
+                        result = dao.deleteDetailPemesanan(entity.getIdDetailPemesanan());
+                        if(result){
+                            JOptionPane.showMessageDialog(null,"Berhasil hapus barang");
+                            setupTable();
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(null,"Gagal hapus barang");
+                        }
                     }else{
                         JOptionPane.showMessageDialog(null,"Gagal hapus barang");
                     }
                 }else{
                     JOptionPane.showMessageDialog(null,"Gagal hapus barang");
                 }
-            }else{
-                JOptionPane.showMessageDialog(null,"Gagal hapus barang");
             }
         }catch(Exception e){
             try {
@@ -422,8 +426,15 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelesaiActionPerformed
-        
+        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyelesaikan transaksi?","Selesaikan Transaksi?",JOptionPane.YES_NO_OPTION);
+        if(confirm==0)
+        this.setVisible(false);
+        new PemesananForm(entity).setVisible(true);
     }//GEN-LAST:event_btnSelesaiActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -434,8 +445,6 @@ public class EditDetailPemesananForm extends javax.swing.JFrame {
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox cbBarang;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

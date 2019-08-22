@@ -20,4 +20,5 @@ public interface PembayaranDao {
     public boolean createPembayaran(Entity entity);
     public boolean updatePembayaran(Entity entity);
     public String getLastNoPembayaran();
+    public ResultSet getReportBulanan(String tglAwal);
 }

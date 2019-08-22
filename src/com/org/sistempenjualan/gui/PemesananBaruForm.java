@@ -222,7 +222,7 @@ public class PemesananBaruForm extends javax.swing.JFrame {
             "Apakah anda yakin ingin menutup form?", "Tutup Form", 
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
-            this.setVisible(false);
+            System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
 
