@@ -49,6 +49,7 @@ public class LoginForm extends javax.swing.JFrame  {
     public PemesananForm pemesananForm;
     public PemesananBaruForm pemesananBaruForm;
     public DetailPemesananForm detailPemesananForm;
+    public PembayaranForm pembayaranForm;
     
     // Inisialisasi Objek
     Entity entity = new Entity();
@@ -173,6 +174,8 @@ public class LoginForm extends javax.swing.JFrame  {
             String kode = entity.getRoleSession().toLowerCase();
                 switch(kode){
                     case"admin":
+                        pembayaranForm = new PembayaranForm(entity);
+                        pembayaranForm.setVisible(true);
 //                        detailPemesananForm = new DetailPemesananForm(entity);
 //                        detailPemesananForm.setVisible(true);
 //                        pemesananBaruForm = new PemesananBaruForm(entity);
@@ -181,8 +184,8 @@ public class LoginForm extends javax.swing.JFrame  {
 //                        pemesananForm.setVisible(true);
 //                        detailSuratJalanForm = new DetailSuratJalanForm(entity);
 //                        detailSuratJalanForm.setVisible(true);
-                        suratJalanForm = new SuratJalanForm(entity);
-                        suratJalanForm.setVisible(true);
+//                        suratJalanForm = new SuratJalanForm(entity);
+//                        suratJalanForm.setVisible(true);
 //                        customerForm = new CustomerForm(entity);
 //                        customerForm.setVisible(true);
 //                        supplierForm = new SupplierForm(entity);

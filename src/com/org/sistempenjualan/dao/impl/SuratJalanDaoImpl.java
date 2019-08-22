@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -155,5 +157,26 @@ public class SuratJalanDaoImpl implements SuratJalanDao{
         
         return result;
     }
-    
+
+    @Override
+    public Map<String, Object> getNoSuratJalan(String noPemesanan) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try{
+            String sql = "SELECT a.id_surat_jalan, a.no_surat_jalan "
+                        + "FROM surat_jalan a, header_pemesanan b "
+                        + "WHERE a.id_pemesanan = b.id_pemesanan "
+                        + "AND b.no_pemesanan = ? ";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, noPemesanan);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                map.put("idSuratJalan", rs.getInt(1));
+                map.put("noSuratJalan", rs.getString(2));
+            }
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error Membuat Surat Jalan ("+e.toString()+")");
+        }
+        
+        return map;
+    }
 }

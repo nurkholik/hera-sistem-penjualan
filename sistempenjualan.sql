@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2019 at 08:23 AM
+-- Generation Time: Aug 22, 2019 at 03:40 AM
 -- Server version: 5.6.26
 -- PHP Version: 5.5.28
 
@@ -221,15 +221,23 @@ CREATE TABLE IF NOT EXISTS `transaksi` (
   `metode_pembayaran` varchar(20) NOT NULL,
   `jenis_pembayaran` varchar(20) NOT NULL,
   `tanggal_transaksi` datetime NOT NULL,
-  `tanggal_bayar` datetime NOT NULL,
+  `tanggal_bayar` datetime DEFAULT NULL,
   `id_pemesanan` int(11) NOT NULL,
-  `id_surat_jalan` int(11) NOT NULL,
+  `id_surat_jalan` int(11) DEFAULT NULL,
   `total_bayar` int(11) NOT NULL,
   `yang_dibayar` int(11) NOT NULL,
   `selisih` int(11) NOT NULL,
   `tanggal_entri` datetime NOT NULL,
   `update_by` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `transaksi`
+--
+
+INSERT INTO `transaksi` (`id_transaksi`, `no_transaksi`, `metode_pembayaran`, `jenis_pembayaran`, `tanggal_transaksi`, `tanggal_bayar`, `id_pemesanan`, `id_surat_jalan`, `total_bayar`, `yang_dibayar`, `selisih`, `tanggal_entri`, `update_by`) VALUES
+(1, 'STR/2019/08/21/0001', 'Tunai', '', '2019-08-21 00:00:00', '2019-08-21 00:00:00', 9, 2, 195000, 200000, -5000, '2019-08-21 20:53:40', '00000'),
+(2, 'STR/2019/08/21/0002', '', '', '2019-08-21 00:00:00', '2019-08-21 00:00:00', 8, 0, 120000, 150000, -30000, '2019-08-21 21:00:41', '00000');
 
 --
 -- Indexes for dumped tables
@@ -302,7 +310,7 @@ ALTER TABLE `surat_jalan`
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

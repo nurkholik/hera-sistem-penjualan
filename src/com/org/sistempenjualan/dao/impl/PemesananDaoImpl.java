@@ -274,5 +274,46 @@ public class PemesananDaoImpl implements PemesananDao {
         }
         return vector;
     }
+
+    @Override
+    public Vector getAllNoPemesanan() {
+        Vector vector = new Vector();
+        try{
+            String sql = "SELECT a.no_pemesanan "
+                        + "FROM header_pemesanan a "
+                        + "WHERE NOT EXISTS (SELECT 1 FROM transaksi b where b.id_pemesanan = a.id_pemesanan) "
+                        + "ORDER BY a.no_pemesanan DESC ";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            vector.add("-- Pilih No Pemesanan --");
+            while(rs.next()){
+                vector.add(rs.getString(1));
+            }
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
+        }
+        return vector;
+    }
+
+    @Override
+    public int getTotalBayar(int idPemesanan) {
+        int result = 0;
+        try{
+            String sql = "SELECT SUM(b.jumlah * c.harga)\n" +
+                         "FROM header_pemesanan a, detail_pemesanan b, mst_barang c\n" +
+                         "WHERE a.id_pemesanan = b.id_pemesanan\n" +
+                         "AND b.kode_barang = c.kode_barang\n" +
+                         "AND a.id_pemesanan = ?";
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, idPemesanan);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                result = rs.getInt(1);
+            }
+        } catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
+        }
+        return result;
+    }
     
 }

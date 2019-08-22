@@ -7,6 +7,7 @@ package com.org.sistempenjualan.dao;
 
 import com.org.sistempenjualan.entity.Entity;
 import java.sql.ResultSet;
+import java.util.Map;
 
 /**
  *
@@ -20,4 +21,7 @@ public interface SuratJalanDao {
     public boolean createSuratJalan(Entity entity);
     public boolean cancelSuratJalan(int idSuratJalan);
     public int getIdSuratJalan(String noSuratJalan);
+    
+    // Form Pembayaran
+    public Map<String, Object> getNoSuratJalan(String noPemesanan);
 }

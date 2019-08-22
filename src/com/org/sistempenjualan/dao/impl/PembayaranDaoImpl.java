@@ -28,25 +28,27 @@ public class PembayaranDaoImpl implements PembayaranDao{
     public ResultSet setPembayaranTable() {
         ResultSet res = null;
         try{
-          String sql = "SELECT a.id_transaksi, "
-                    + "a.id_pemesanan, "
-                    + "a.id_surat_jalan, "
-                    + "a.no_transaksi as 'No Transaksi', "
-                    + "b.no_pemesanan as 'No Pemesanan', "
-                    + "c.no_surat_jalan as 'No Surat Jalan', "
-                    + "a.metode_pembayaran as 'Metode Pembayaran', "
-                    + "a.jenis_pembayaran as 'Jenis Pembayaran', "
-                    + "a.tanggal_transaksi as 'Tanggal Transaksi', "
-                    + "a.tanggal_bayar as 'Tanggal Bayar', "
-                    + "a.total_bayar as 'Total Bayar', "
-                    + "a.yang_dibayar as 'Yang Dibayarkan', "
-                    + "a.selisih Selisih, "
-                    + "a.tanggal_entri as 'Tanggal Entri', "
-                    + "a.update_by NIK "
-                    + "FROM transaksi a, header_pemesanan b, surat_jalan c "
-                    + "WHERE a.id_pemesanan = b.id_pemesanan "
-                    + "AND b.id_pemesanan = c.id_pemesanan (+) "
-                    + "ORDER BY a.no_transaksi DESC ";
+          String sql = "SELECT a.id_transaksi, "+
+                    "a.id_pemesanan, "+
+                    "a.id_surat_jalan, "+
+                    "a.no_transaksi as 'No Transaksi', "+
+                    "b.no_pemesanan as 'No Pemesanan', "+
+                    "c.no_surat_jalan as 'No Surat Jalan', "+
+                    "a.metode_pembayaran as 'Metode Pembayaran', "+
+                    "a.jenis_pembayaran as 'Jenis Pembayaran', "+
+                    "a.tanggal_transaksi as 'Tanggal Transaksi', "+
+                    "a.tanggal_bayar as 'Tanggal Bayar', "+
+                    "a.total_bayar as 'Total Bayar', "+
+                    "a.yang_dibayar as 'Yang Dibayarkan', "+
+                    "a.selisih Selisih, "+
+                    "a.tanggal_entri as 'Tanggal Entri', "+
+                    "a.update_by NIK "+
+                    "FROM transaksi a "+
+                    "JOIN header_pemesanan b "+
+                    "ON a.id_pemesanan = b.id_pemesanan "+
+                    "LEFT JOIN surat_jalan c "+
+                    "ON b.id_pemesanan = c.id_pemesanan "+
+                    "ORDER BY a.no_transaksi DESC";
             pst = con.prepareStatement(sql);
             res = pst.executeQuery();  
         } catch (SQLException | HeadlessException e){
@@ -59,25 +61,27 @@ public class PembayaranDaoImpl implements PembayaranDao{
     public ResultSet setPembayaranTable(String param) {
         ResultSet res = null;
         try{
-          String sql = "SELECT a.id_transaksi, "
-                    + "a.id_pemesanan, "
-                    + "a.id_surat_jalan, "
-                    + "a.no_transaksi as 'No Transaksi', "
-                    + "b.no_pemesanan as 'No Pemesanan', "
-                    + "c.no_surat_jalan as 'No Surat Jalan', "
-                    + "a.metode_pembayaran as 'Metode Pembayaran', "
-                    + "a.jenis_pembayaran as 'Jenis Pembayaran', "
-                    + "a.tanggal_transaksi as 'Tanggal Transaksi', "
-                    + "a.tanggal_bayar as 'Tanggal Bayar', "
-                    + "a.total_bayar as 'Total Bayar', "
-                    + "a.yang_dibayar as 'Yang Dibayarkan', "
-                    + "a.selisih Selisih, "
-                    + "a.tanggal_entri as 'Tanggal Entri', "
-                    + "a.update_by NIK "
-                    + "FROM transaksi a, header_pemesanan b, surat_jalan c "
-                    + "WHERE a.id_pemesanan = b.id_pemesanan "
-                    + "AND b.id_pemesanan = c.id_pemesanan (+) "
-                    + "AND (a.no_transaksi LIKE ? "
+          String sql = "SELECT a.id_transaksi, "+
+                    "a.id_pemesanan, "+
+                    "a.id_surat_jalan, "+
+                    "a.no_transaksi as 'No Transaksi', "+
+                    "b.no_pemesanan as 'No Pemesanan', "+
+                    "c.no_surat_jalan as 'No Surat Jalan', "+
+                    "a.metode_pembayaran as 'Metode Pembayaran', "+
+                    "a.jenis_pembayaran as 'Jenis Pembayaran', "+
+                    "a.tanggal_transaksi as 'Tanggal Transaksi', "+
+                    "a.tanggal_bayar as 'Tanggal Bayar', "+
+                    "a.total_bayar as 'Total Bayar', "+
+                    "a.yang_dibayar as 'Yang Dibayarkan', "+
+                    "a.selisih Selisih, "+
+                    "a.tanggal_entri as 'Tanggal Entri', "+
+                    "a.update_by NIK "+
+                    "FROM transaksi a "+
+                    "JOIN header_pemesanan b "+
+                    "ON a.id_pemesanan = b.id_pemesanan "+
+                    "LEFT JOIN surat_jalan c "+
+                    "ON b.id_pemesanan = c.id_pemesanan "
+                    + "WHERE (a.no_transaksi LIKE ? "
                     + "OR b.no_pemesanan LIKE ? "
                     + "OR c.no_surat_jalan LIKE ?) "
                     + "ORDER BY a.no_transaksi DESC ";
@@ -135,6 +139,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
             pst.setInt(10, entity.getSelisih());
             pst.setString(11, entity.getNikSession());
             pst.execute();
+            result = true;
         } catch (SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
         }
@@ -166,6 +171,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
             pst.setString(8, entity.getNikSession());
             pst.setString(9, entity.getNoTransaksi());
             pst.execute();
+            result = true;
         } catch (SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
         }

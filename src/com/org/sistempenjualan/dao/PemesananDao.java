@@ -33,4 +33,8 @@ public interface PemesananDao {
     
     // Form Surat Jalan
     public Vector getListNoPemesanan();
+    
+    // Form Pembayaran
+    public Vector getAllNoPemesanan();
+    public int getTotalBayar(int idPemesanan);
 }
