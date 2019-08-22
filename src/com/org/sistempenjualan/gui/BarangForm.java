@@ -38,6 +38,8 @@ public class BarangForm extends javax.swing.JFrame {
     public BarangForm(Entity a) {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         nikSession = a.getNikSession();
         userSession.setText("Login As: "+a.getUserSession());
         entity.setNikSession(nikSession);
@@ -51,6 +53,7 @@ public class BarangForm extends javax.swing.JFrame {
         getListSupplier();
         clearForm();
         generateKodeBarang();
+        btnHapus.setEnabled(false);
     }
     
     public void setupTable(){
@@ -63,12 +66,15 @@ public class BarangForm extends javax.swing.JFrame {
     }
     
     public void clearForm(){
+        generateKodeBarang();
         cbSupplier.setSelectedIndex(0);
         txtNamaBarang.setText("");
         txtCariBarang.setText("");
         txtNamaBarang.setText("");
         txtJmlBarang.setText("0");
         txtHarga.setText("0");
+        flagUpdate = false;
+        btnHapus.setEnabled(false);
     }
     
     public void generateKodeBarang(){
@@ -136,12 +142,23 @@ public class BarangForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Form Barang");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblSupplier.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblSupplier.setText("Supplier");
 
         lblNamaBarang.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblNamaBarang.setText("Nama Barang");
+
+        txtNamaBarang.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNamaBarangKeyReleased(evt);
+            }
+        });
 
         lblJmlBarang.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblJmlBarang.setText("Jumlah Barang");
@@ -309,7 +326,6 @@ public class BarangForm extends javax.swing.JFrame {
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         flagUpdate = false;
-        generateKodeBarang();
         clearForm();
     }//GEN-LAST:event_btnResetActionPerformed
 
@@ -324,6 +340,8 @@ public class BarangForm extends javax.swing.JFrame {
         txtJmlBarang.setText(model.getValueAt(row, 2).toString());
         txtHarga.setText(model.getValueAt(row, 3).toString());
         cbSupplier.setSelectedItem(model.getValueAt(row, 4).toString());
+        
+        btnHapus.setEnabled(true);
     }//GEN-LAST:event_tblBarangMouseClicked
 
     private void txtCariBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariBarangKeyReleased
@@ -340,25 +358,38 @@ public class BarangForm extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         boolean result = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
         try{
             entity.setKodeBarang(txtKodeBarang.getText());
             entity.setNamaBarang(txtNamaBarang.getText());
             entity.setJumlahBarang(Integer.parseInt(txtJmlBarang.getText()));
             entity.setHargaBarang(Integer.parseInt(txtHarga.getText()));
             entity.setKodeSupplier(kodeSupplier);
-            if(flagUpdate){
-                result = dao.addBarang(entity);
-                if(result){
-                    JOptionPane.showMessageDialog(rootPane, "Berhasil simpan barang!");
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Error simpan barang!");
-                }
+            if(txtNamaBarang.getText().equals("")){
+                JOptionPane.showMessageDialog(rootPane, "Nama Barang Tidak Boleh Kosong!");
+            }else if(kodeSupplier.equals("")){
+                JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Supplier Terlebih Dulu!");
             }else{
-                result = dao.editBarang(entity);
-                if(result){
-                    JOptionPane.showMessageDialog(rootPane, "Berhasil update barang!");
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Error update barang!");
+                if(confirm == 0){
+                    if(!flagUpdate){
+                        result = dao.addBarang(entity);
+                        if(result){
+                            JOptionPane.showMessageDialog(rootPane, "Berhasil simpan barang!");
+                            setupTable();
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane, "Error simpan barang!");
+                        }
+                    }else{
+                        result = dao.editBarang(entity);
+                        if(result){
+                            JOptionPane.showMessageDialog(rootPane, "Berhasil update barang!");
+                            setupTable();
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane, "Error update barang!");
+                        }
+                    }
                 }
             }
         }catch(Exception e){
@@ -369,17 +400,36 @@ public class BarangForm extends javax.swing.JFrame {
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         boolean result = false;
         String kodeBarang = txtKodeBarang.getText();
+        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
         try{
-            result = dao.deleteBarang(kodeBarang);
-            if(result){
-                JOptionPane.showMessageDialog(rootPane, "Berhasil hapus barang! ");
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "Error hapus barang! ");
+            if(confirm==0){
+                result = dao.deleteBarang(kodeBarang);
+                if(result){
+                    JOptionPane.showMessageDialog(rootPane, "Berhasil hapus barang! ");
+                    setupTable();
+                    clearForm();
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Error hapus barang! ");
+                }
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(rootPane, "Error hapus barang! "+e);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void txtNamaBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaBarangKeyReleased
+        String namaBarang = txtNamaBarang.getText().toUpperCase();
+        txtNamaBarang.setText(namaBarang);
+    }//GEN-LAST:event_txtNamaBarangKeyReleased
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (JOptionPane.showConfirmDialog(this, 
+            "Apakah anda yakin ingin menutup form?", "Tutup Form", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
+    }//GEN-LAST:event_formWindowClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
