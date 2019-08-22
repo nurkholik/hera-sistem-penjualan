@@ -29,4 +29,28 @@ LEFT JOIN surat_jalan d
 ON d.id_pemesanan = a.id_pemesanan
 JOIN mst_customer v
 ON a.no_customer = v.no_customer
-WHERE a.no_pemesanan = 'PO/2019/08/0009'
+WHERE a.no_pemesanan = 'PO/2019/08/0009';
+
+// QUERY REPORT BULANAN
+SELECT a.id_transaksi, 
+a.id_pemesanan, 
+a.id_surat_jalan, 
+a.no_transaksi as 'No Transaksi', 
+b.no_pemesanan as 'No Pemesanan', 
+c.no_surat_jalan as 'No Surat Jalan', 
+a.metode_pembayaran as 'Metode Pembayaran', 
+a.jenis_pembayaran as 'Jenis Pembayaran', 
+DATE_FORMAT(a.tanggal_transaksi,'%d %M %Y') as 'Tanggal Transaksi', 
+DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', 
+a.total_bayar as 'Total Bayar', 
+a.yang_dibayar as 'Yang Dibayarkan', 
+a.selisih Selisih, 
+a.tanggal_entri as 'Tanggal Entri', 
+a.update_by NIK 
+FROM transaksi a 
+JOIN header_pemesanan b 
+ON a.id_pemesanan = b.id_pemesanan 
+LEFT JOIN surat_jalan c 
+ON b.id_pemesanan = c.id_pemesanan 
+WHERE DATE_FORMAT(a.tanggal_transaksi, '%M %Y') = DATE_FORMAT(?,'%M %Y')
+ORDER BY a.no_transaksi DESC
