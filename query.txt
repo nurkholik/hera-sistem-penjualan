@@ -1,0 +1,7 @@
+// QUERY TABEL DI CETAKAN SURAT JALAN
+SELECT b.no_pemesanan, CONCAT(c.kode_barang, ' - ', d.nama_barang), c.jumlah, c.keterangan
+FROM surat_jalan a, header_pemesanan b, detail_pemesanan c, mst_barang d
+WHERE a.id_pemesanan = b.id_pemesanan
+AND b.id_pemesanan = c.id_pemesanan
+AND c.kode_barang = d.kode_barang
+AND a.no_surat_jalan = ?
