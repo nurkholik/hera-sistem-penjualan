@@ -676,8 +676,11 @@ public class PembayaranForm extends javax.swing.JFrame {
     private void btnBaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBaruActionPerformed
         String txtBtnBaru = btnBaru.getText();
         if(txtBtnBaru.equals("Baru")){
+            getListPemesanan();
             flagUpdate = false;
             btnBaru.setText("Cancel");
+            cbPemesanan.setEnabled(true);
+            cbJenisPembayaran.setEnabled(true);
             clearForm();
             generateNoPembayaran();
         }else{

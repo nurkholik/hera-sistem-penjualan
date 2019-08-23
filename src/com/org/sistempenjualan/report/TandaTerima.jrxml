@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="0.7513148009015794"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="22"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="no_transaksi" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -278,7 +278,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{no_transaksi}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
+			<textField pattern="Rp #,##0.00">
 				<reportElement x="534" y="5" width="131" height="20"/>
 				<box>
 					<pen lineWidth="0.0"/>
@@ -292,7 +292,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_bayar}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="667" y="5" width="133" height="20"/>
 				<box>
 					<pen lineWidth="0.0"/>
@@ -385,13 +385,6 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				</textElement>
 				<text><![CDATA[SIGNATURE]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="590" y="34" width="58" height="20"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[BOGOR]]></text>
-			</staticText>
 			<textField pattern="dd MMMMM yyyy">
 				<reportElement x="671" y="34" width="129" height="20"/>
 				<textElement>
@@ -399,7 +392,7 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="Rp #,##0.00">
 				<reportElement x="671" y="0" width="129" height="20"/>
 				<textElement>
 					<font size="12"/>
@@ -412,6 +405,13 @@ AND a.no_transaksi = $P{no_transaksi}]]>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="571" y="34" width="100" height="20"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kota}+", "]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
