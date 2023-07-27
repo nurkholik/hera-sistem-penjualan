@@ -9,11 +9,15 @@ import com.org.sistempenjualan.DbConnect;
 import com.org.sistempenjualan.dao.BarangDao;
 import com.org.sistempenjualan.entity.Entity;
 import java.awt.HeadlessException;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -29,14 +33,16 @@ public class BarangDaoImpl implements BarangDao{
     public ResultSet setBarangTable() {
         ResultSet res = null;
         try{
-            String sql = "SELECT a.kode_barang as 'Kode Barang', "
+            String sql = "SELECT a.id as 'ID', a.kode_barang as 'Kode Barang', "
                         + "a.nama_barang as 'Nama Barang', "
                         + "a.jumlah Jumlah, "
-                        + "a.harga Harga, "
-                        + "CONCAT (a.kode_supplier,' - ',b.nama_supplier) Supplier "
-                        + "FROM mst_barang a, mst_supplier b "
-                        + "WHERE a.kode_supplier = b.kode_supplier "
+                        + "a.harga Harga "
+                        + "FROM mst_barang a "
                         + "ORDER BY a.kode_barang ASC ";
+//                        + "CONCAT (a.kode_supplier,' - ',b.nama_supplier) Supplier "
+//                        + "FROM mst_barang a, mst_supplier b "
+//                        + "WHERE a.kode_supplier = b.kode_supplier "
+//                        + "ORDER BY a.kode_barang ASC ";
             pst = con.prepareStatement(sql);
             res = pst.executeQuery();
         } catch (SQLException | HeadlessException e){
@@ -82,7 +88,7 @@ public class BarangDaoImpl implements BarangDao{
         }
         return vector;
     }
-
+    
     @Override
     public boolean updateStokBarang(String kodeBarang, int jumlah) {
         boolean result = false;
@@ -128,18 +134,20 @@ public class BarangDaoImpl implements BarangDao{
             String sql = "SELECT a.kode_barang as 'Kode Barang', "
                         + "a.nama_barang as 'Nama Barang', "
                         + "a.jumlah Jumlah, "
-                        + "a.harga Harga, "
-                        + "CONCAT (a.kode_supplier,' - ',b.nama_supplier) Supplier "
-                        + "FROM mst_barang a, mst_supplier b "
-                        + "WHERE a.kode_supplier = b.kode_supplier "
-                        + "AND (a.kode_barang LIKE ? "
+                        + "a.harga Harga "
+//                        + "CONCAT (a.kode_supplier,' - ',b.nama_supplier) Supplier "
+                        + "FROM mst_barang a "
+                        + "WHERE a.kode_barang LIKE ? "
                         + "OR a.nama_barang LIKE ? "
-                        + "OR b.nama_supplier LIKE ?) "
                         + "ORDER BY a.kode_barang ASC ";
+//                        + "WHERE a.kode_supplier = b.kode_supplier "
+//                        + "AND (a.kode_barang LIKE ? "
+//                        + "OR a.nama_barang LIKE ? "
+//                        + "OR b.nama_supplier LIKE ?) "
+//                        + "ORDER BY a.kode_barang ASC ";
             pst = con.prepareStatement(sql);
             pst.setString(1, "%"+param+"%");
             pst.setString(2, "%"+param+"%");
-            pst.setString(3, "%"+param+"%");
             res = pst.executeQuery();
         } catch (SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
@@ -169,15 +177,25 @@ public class BarangDaoImpl implements BarangDao{
     public boolean addBarang(Entity entity) {
         boolean result = false;
         try{
-            String sql = "INSERT INTO mst_barang (kode_barang,nama_barang,jumlah,harga,kode_supplier,tanggal_entri,update_by) "
-                    + "values (?,?,?,?,?,DATE_FORMAT(NOW(),'%Y-%m-%d %T'),?)";
+//            String sql = "INSERT INTO mst_barang (kode_barang,nama_barang,jumlah,harga,kode_supplier,tanggal_entri,update_by) "
+//                    + "values (?,?,?,?,?,DATE_FORMAT(NOW(),'%Y-%m-%d %T'),?)";
+//            pst = con.prepareStatement(sql);
+//            pst.setString(1, entity.getKodeBarang());
+//            pst.setString(2, entity.getNamaBarang());
+//            pst.setInt(3, entity.getJumlahBarang());
+//            pst.setInt(4, entity.getHargaBarang());
+//            pst.setString(5, entity.getKodeSupplier());
+//            pst.setString(6, entity.getNikSession());
+//            pst.execute();
+//            result = true;
+            String sql = "INSERT INTO mst_barang (kode_barang,nama_barang,jumlah,harga,tanggal_entri,update_by) "
+                    + "values (?,?,?,?,DATE_FORMAT(NOW(),'%Y-%m-%d %T'),?)";
             pst = con.prepareStatement(sql);
             pst.setString(1, entity.getKodeBarang());
             pst.setString(2, entity.getNamaBarang());
             pst.setInt(3, entity.getJumlahBarang());
             pst.setInt(4, entity.getHargaBarang());
-            pst.setString(5, entity.getKodeSupplier());
-            pst.setString(6, entity.getNikSession());
+            pst.setString(5, entity.getNikSession());
             pst.execute();
             result = true;
         } catch (SQLException | HeadlessException e){
@@ -191,21 +209,40 @@ public class BarangDaoImpl implements BarangDao{
     public boolean editBarang(Entity entity) {
         boolean result = false;
         try{
+//            String sql = "UPDATE mst_barang a "
+//                        + "SET a.nama_barang = ?, "
+//                        + "a.jumlah = jumlah + ?, "
+//                        + "a.harga = ?, "
+//                        + "a.kode_supplier = ?, "
+//                        + "a.tanggal_entri = DATE_FORMAT(NOW(),'%Y-%m-%d %T'), "
+//                        + "a.update_by = ? "
+//                        + "WHERE a.kode_barang = ? ";
+//            pst = con.prepareStatement(sql);
+//            pst.setString(1, entity.getNamaBarang());
+//            pst.setInt(2, entity.getJumlahBarang());
+//            pst.setInt(3, entity.getHargaBarang());
+//            pst.setString(4, entity.getKodeSupplier());
+//            pst.setString(5, entity.getNikSession());
+//            pst.setString(6, entity.getKodeBarang());
+//            pst.executeUpdate();
+//            result = true;
             String sql = "UPDATE mst_barang a "
                         + "SET a.nama_barang = ?, "
                         + "a.jumlah = jumlah + ?, "
                         + "a.harga = ?, "
-                        + "a.kode_supplier = ?, "
+//                        + "a.kode_supplier = ?, "
                         + "a.tanggal_entri = DATE_FORMAT(NOW(),'%Y-%m-%d %T'), "
-                        + "a.update_by = ? "
-                        + "WHERE a.kode_barang = ? ";
+                        + "a.update_by = ?, "
+                        + "a.kode_barang = ? "
+                        + "WHERE a.id = ? ";
             pst = con.prepareStatement(sql);
             pst.setString(1, entity.getNamaBarang());
             pst.setInt(2, entity.getJumlahBarang());
             pst.setInt(3, entity.getHargaBarang());
-            pst.setString(4, entity.getKodeSupplier());
-            pst.setString(5, entity.getNikSession());
-            pst.setString(6, entity.getKodeBarang());
+//            pst.setString(4, entity.getKodeSupplier());
+            pst.setString(4, entity.getNikSession());
+            pst.setString(5, entity.getKodeBarang());
+            pst.setInt(6, entity.getIdBarang());
             pst.executeUpdate();
             result = true;
         } catch (SQLException | HeadlessException e){
@@ -231,4 +268,23 @@ public class BarangDaoImpl implements BarangDao{
         return result;
     }
     
+    @Override
+    public boolean isExistByKodeBarang(String kodeBarang, Integer idBarang) {
+        try {
+            pst = con.prepareStatement("SELECT (count(id) > 0) as is_exist FROM mst_barang WHERE kode_barang = ? "
+                    + "AND (? IS NULL OR id <> ?)");
+            pst.setString(1, kodeBarang);
+            pst.setInt(2, idBarang);
+            pst.setInt(3, idBarang);
+            rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getBoolean("is_exist");
+            }
+            return false;
+        } catch (SQLException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
+            return true;
+        }
+    }
 }

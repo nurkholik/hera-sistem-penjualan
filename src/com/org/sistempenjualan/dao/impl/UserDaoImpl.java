@@ -130,19 +130,23 @@ public class UserDaoImpl implements UserDao{
             String sql = "UPDATE mst_user a "
                         + "SET a.nama_user = ?, "
                         + "a.role = ?, "
+                        + "a.password = ?, "
                         + "a.tanggal_system = DATE_FORMAT(NOW(),'%Y-%m-%d %T'),"
                         + "a.update_by = ? "
                         + "WHERE a.nik = ? ";
             pst = con.prepareStatement(sql);
             pst.setString(1, entity.getUserName());
             pst.setString(2, entity.getRole());
-            pst.setString(3, entity.getNikSession());
-            pst.setString(4, entity.getNik());
+            pst.setString(3, entity.getMd5(entity.getPassword()));
+            pst.setString(4, entity.getNikSession());
+            pst.setString(5, entity.getNik());
             pst.execute();
             result = true;
         } catch (SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null,"Error Edit User ("+e.toString()+")");
-        } 
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return result;
     }

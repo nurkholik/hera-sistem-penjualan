@@ -102,8 +102,6 @@ public class UserForm extends javax.swing.JFrame {
         mbUser = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btnLogOut = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        menuSupplier = new javax.swing.JMenuItem();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
 
@@ -124,7 +122,7 @@ public class UserForm extends javax.swing.JFrame {
         lblRoleUser.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblRoleUser.setText("Role User");
 
-        cbRoleUser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Pilih Role --", "Admin", "Inventory", "Kasir", "Kurir", "Registrasi" }));
+        cbRoleUser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Pilih Role --", "Admin", "Inventory", "Kasir", "Kurir", "Registrasi", "Direktur" }));
 
         btnNikBaru.setText("Baru");
         btnNikBaru.addActionListener(new java.awt.event.ActionListener() {
@@ -214,18 +212,6 @@ public class UserForm extends javax.swing.JFrame {
         jMenu1.add(btnLogOut);
 
         mbUser.add(jMenu1);
-
-        jMenu2.setText("Form");
-
-        menuSupplier.setText("Form Supplier");
-        menuSupplier.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuSupplierActionPerformed(evt);
-            }
-        });
-        jMenu2.add(menuSupplier);
-
-        mbUser.add(jMenu2);
 
         todayDate.setText("Date");
         mbUser.add(todayDate);
@@ -410,6 +396,7 @@ public class UserForm extends javax.swing.JFrame {
                     entity.setUserName(userName);
                     entity.setRole(role);
                     entity.setNikSession(nikSession);
+                    entity.setPassword(password);
                     result = dao.editUser(entity);
                     if(result){
                         JOptionPane.showMessageDialog(rootPane,"Data Berhasil diupdate!");
@@ -485,12 +472,6 @@ public class UserForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnHapusUserActionPerformed
 
-    private void menuSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSupplierActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new SupplierForm(entity).setVisible(true);
-    }//GEN-LAST:event_menuSupplierActionPerformed
-
     private void btnResetFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetFormActionPerformed
         // TODO add your handling code here:
         clearForm();
@@ -517,7 +498,6 @@ public class UserForm extends javax.swing.JFrame {
     private javax.swing.JButton btnSimpanUser;
     private javax.swing.JComboBox cbRoleUser;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAlert;
     private javax.swing.JLabel lblCariUser;
@@ -527,7 +507,6 @@ public class UserForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblRoleUser;
     private javax.swing.JMenuBar mbUser;
-    private javax.swing.JMenuItem menuSupplier;
     private javax.swing.JTable tblUser;
     private javax.swing.JMenu todayDate;
     private javax.swing.JTextField txtCariUser;

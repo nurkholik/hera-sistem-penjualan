@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"  >
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="0.8264462809917368"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -42,7 +42,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 	<title>
 		<band height="182" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="802" height="23"  />
+				<reportElement x="0" y="0" width="802" height="23"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -56,56 +56,56 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[INVOICE]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="0" y="24" width="802" height="153"  />
+				<reportElement x="0" y="24" width="802" height="153"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="289" y="28" width="100" height="20"  />
+				<reportElement x="289" y="28" width="100" height="20"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<text><![CDATA[TO MESSRS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="389" y="28" width="48" height="20"  />
-				<textElement>
-					<font size="14"/>
-				</textElement>
-				<text><![CDATA[Bogor,]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="289" y="145" width="60" height="20"  />
+				<reportElement x="289" y="145" width="60" height="20"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<text><![CDATA[Phone :]]></text>
 			</staticText>
 			<textField pattern="dd MMMMM yyyy">
-				<reportElement x="437" y="28" width="205" height="20"  />
+				<reportElement x="489" y="28" width="205" height="20"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="289" y="48" width="200" height="20"  />
+				<reportElement x="289" y="48" width="200" height="20"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_customer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="289" y="68" width="200" height="20"  />
+				<reportElement x="289" y="68" width="286" height="20"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{alamat}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="349" y="145" width="200" height="20"  />
+				<reportElement x="349" y="145" width="200" height="20"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{no_telp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="391" y="28" width="100" height="20"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kota}+", "]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -115,7 +115,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 	<columnHeader>
 		<band height="44" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="1" width="37" height="40"  />
+				<reportElement x="0" y="1" width="37" height="40"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -129,7 +129,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="37" y="1" width="164" height="40" />
+				<reportElement x="37" y="1" width="164" height="40"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -143,7 +143,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Surat Jalan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="492" y="21" width="83" height="20"  />
+				<reportElement x="492" y="21" width="83" height="20"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -157,7 +157,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Unit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="575" y="21" width="100" height="20"  />
+				<reportElement x="575" y="21" width="100" height="20"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -171,7 +171,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Currency]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="330" y="1" width="161" height="40"  />
+				<reportElement x="330" y="1" width="161" height="40"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -185,7 +185,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Nama Barang]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="492" y="1" width="83" height="20"  />
+				<reportElement x="492" y="1" width="83" height="20"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -199,7 +199,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Quantity]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="575" y="1" width="100" height="20"  />
+				<reportElement x="575" y="1" width="100" height="20"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -213,7 +213,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Harga]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="675" y="1" width="127" height="40"  />
+				<reportElement x="675" y="1" width="127" height="40"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -227,7 +227,7 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 				<text><![CDATA[Subtotal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="201" y="1" width="129" height="40"  />
+				<reportElement x="201" y="1" width="129" height="40"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -245,56 +245,56 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 	<detail>
 		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement x="330" y="0" width="159" height="20"  />
+				<reportElement x="330" y="0" width="159" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="201" y="0" width="129" height="20"  />
+				<reportElement x="201" y="0" width="129" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{no_pemesanan}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="37" y="0" width="164" height="20"  />
+				<reportElement x="37" y="0" width="164" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{No Surat Jalan}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="489" y="0" width="86" height="20"  />
+				<reportElement x="489" y="0" width="86" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Rp #,##0.00">
-				<reportElement x="575" y="0" width="100" height="20"  />
+				<reportElement x="575" y="0" width="100" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{harga}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Rp #,##0.00">
-				<reportElement x="675" y="0" width="127" height="20"  />
+				<reportElement x="675" y="0" width="127" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{b.jumlah * c.harga}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="37" height="20"  />
+				<reportElement x="0" y="0" width="37" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="20" width="802" height="1"  />
+				<reportElement x="0" y="20" width="802" height="1"/>
 			</line>
 		</band>
 	</detail>
@@ -307,34 +307,27 @@ WHERE a.no_pemesanan = $P{no_pemesanan}]]>
 	<summary>
 		<band height="137" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="0" width="423" height="96"  />
+				<reportElement x="0" y="0" width="423" height="96"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="349" y="0" width="74" height="20"  />
-				<textElement>
-					<font size="14"/>
-				</textElement>
-				<text><![CDATA[Bogor]]></text>
-			</staticText>
 			<rectangle>
-				<reportElement x="423" y="0" width="379" height="96"  />
+				<reportElement x="423" y="0" width="379" height="96"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="575" y="0" width="100" height="20"  />
+				<reportElement x="575" y="0" width="100" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Grand Total]]></text>
 			</staticText>
 			<textField pattern="Rp #,##0.00">
-				<reportElement x="675" y="0" width="127" height="20"  />
+				<reportElement x="675" y="0" width="127" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grand_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="96" width="802" height="20"  />
+				<reportElement x="0" y="96" width="802" height="20"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>

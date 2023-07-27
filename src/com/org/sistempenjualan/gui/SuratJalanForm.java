@@ -80,6 +80,7 @@ public class SuratJalanForm extends javax.swing.JFrame {
         txtTglPengiriman.getCalendar();
         txtTglPengiriman.setMinSelectableDate(new Date());
         flagUpdate = false;
+        btnCancel.setEnabled(true);
     }
     
     public void setupTable(){
@@ -575,6 +576,7 @@ public class SuratJalanForm extends javax.swing.JFrame {
             getListPemesanan();
             cbNoPesanan.setEnabled(true);
             clearForm();
+            btnCancel.setEnabled(true);
         }else{
             btnBaru.setText("Baru");
             flagUpdate = true;
@@ -582,6 +584,7 @@ public class SuratJalanForm extends javax.swing.JFrame {
             cbNoPesanan.setEnabled(true);
             clearForm();
             txtNoSuratJalan.setText("");
+            btnCancel.setEnabled(false);
         }
     }//GEN-LAST:event_btnBaruActionPerformed
 

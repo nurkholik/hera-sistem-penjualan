@@ -88,7 +88,7 @@ public class Entity {
         }
         
         hash = sb.toString();
-        
+        System.out.println(hash);
         return hash;
     }
     

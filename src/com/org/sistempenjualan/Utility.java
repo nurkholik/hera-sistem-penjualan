@@ -8,9 +8,13 @@ package com.org.sistempenjualan;
 import com.org.sistempenjualan.gui.UserForm;
 import java.awt.Component;
 import static java.lang.Thread.sleep;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenu;
@@ -19,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import net.sf.jasperreports.engine.fill.SimpleTextFormat;
 
 /**
  *
@@ -26,6 +31,11 @@ import javax.swing.table.TableColumnModel;
  */
 public class Utility {
    
+    private final NumberFormat currencyIDFormat;
+    public Utility() {
+        this.currencyIDFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+    }
+            
     public void tanggalSekarang(JMenu todayDate){     
         Thread clock = new Thread(){
             public void run(){
@@ -72,5 +82,22 @@ public class Utility {
     		TableColumn kolom=modelKolom.getColumn(kol);
     		kolom.setPreferredWidth(lebarKolomMax);
     	}//akhir for kolom
+    }
+    
+    public String formatCurrency(long value) {
+        return currencyIDFormat.format(value).replace("Rp", "Rp ");
+    }
+    
+    public Long deFormatCurrency(String value) {
+        try {
+            return currencyIDFormat.parse(value.replace(" ", "")).longValue();
+        } catch (ParseException ex) {
+            return 0L;
+        }
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(new Utility().formatCurrency(100000));
+        System.out.println(new Utility().deFormatCurrency("Rp 150.000,00"));
     }
 }

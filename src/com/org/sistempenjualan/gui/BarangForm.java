@@ -5,15 +5,19 @@
  */
 package com.org.sistempenjualan.gui;
 
+import com.org.sistempenjualan.UIUtil;
 import com.org.sistempenjualan.entity.Entity;
 import javax.swing.Box;
 import com.org.sistempenjualan.Utility;
 import com.org.sistempenjualan.dao.BarangDao;
-import com.org.sistempenjualan.dao.SupplierDao;
 import com.org.sistempenjualan.dao.impl.BarangDaoImpl;
-import com.org.sistempenjualan.dao.impl.SupplierDaoImpl;
-import javax.swing.DefaultComboBoxModel;
+import java.awt.Component;
+import java.awt.HeadlessException;
+import java.text.NumberFormat;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
@@ -28,18 +32,26 @@ public class BarangForm extends javax.swing.JFrame {
     Entity entity = new Entity();
     Utility util = new Utility();
     BarangDao dao = new BarangDaoImpl();
-    SupplierDao sDao = new SupplierDaoImpl();
     
     // Global Variabel
     boolean flagUpdate = false;
     String nikSession = "";
-    String kodeSupplier = "";
     
     public BarangForm(Entity a) {
         initComponents();
+        setupWindow();
+        setupUserInfo(a);
+        setupTable();
+        clearForm();
+    }
+    
+    private void setupWindow() {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    }
+    
+    private void setupUserInfo(Entity a) {
         nikSession = a.getNikSession();
         userSession.setText("Login As: "+a.getUserSession());
         entity.setNikSession(nikSession);
@@ -49,64 +61,58 @@ public class BarangForm extends javax.swing.JFrame {
         mbItem.add(todayDate);
         mbItem.add(userSession);
         util.tanggalSekarang(todayDate);
-        setupTable();
-        getListSupplier();
-        clearForm();
-        generateKodeBarang();
-        btnHapus.setEnabled(false);
     }
     
-    public void setupTable(){
+    private void setupTable(){
         tblBarang.setModel(DbUtils.resultSetToTableModel(dao.setBarangTable()));
+        tblBarang.getColumnModel().getColumn(3).setCellRenderer(new NumberTableCellRenderer());
+        tblBarang.getColumnModel().getColumn(4).setCellRenderer(new NumberTableCellRenderer());
         util.adjustColumn(tblBarang);
     }
     
-    public void getListSupplier(){
-        cbSupplier.setModel(new DefaultComboBoxModel(sDao.getListSupplier()));
+    public class NumberTableCellRenderer extends DefaultTableCellRenderer {
+        public NumberTableCellRenderer() {
+            setHorizontalAlignment(JLabel.RIGHT);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof Number) {
+                value = NumberFormat.getNumberInstance().format(value);
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
     }
     
-    public void clearForm(){
-        generateKodeBarang();
-        cbSupplier.setSelectedIndex(0);
+    private void clearForm(){
+        txtKodeBarang.setText("");
         txtNamaBarang.setText("");
         txtCariBarang.setText("");
         txtNamaBarang.setText("");
         txtJmlBarang.setText("0");
-        txtHarga.setText("0");
+        txtHarga.setText("Rp 0");
         flagUpdate = false;
-        btnHapus.setEnabled(false);
+        btnHapus.setVisible(false);
+        tblBarang.clearSelection();
+        stockComponentVisible(false);
     }
     
-    public void generateKodeBarang(){
-        try{
-            String lastKode = dao.getLastKodeBarang();
-            String newKode = "";
-            if(!lastKode.equals("")){
-                String lastSeq = lastKode.substring(2);
-                String newSeqKode = ""+(Integer.parseInt(lastSeq)+1);
-                String nol = "";
-                if(newSeqKode.length() == 1){
-                    nol = "000";
-                } else if(newSeqKode.length() == 2){
-                    nol = "00";
-                } else if(newSeqKode.length() == 3){
-                    nol = "0";
-                } else if(newSeqKode.length() == 4){
-                    nol = "";
-                }
-
-                newKode = "PR"+nol+newSeqKode;
-            }else{
-                newKode = "PR/0001";
-            }
-            
-            txtKodeBarang.setText(newKode);
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(this,e);
-        }
+    private void stockComponentVisible(boolean isVisible) {
+        lblStock.setVisible(isVisible);
+        txtJmlBarang.setVisible(isVisible);
     }
-
-    /**
+    
+    private Integer getSelectedIdBarang() {
+        if (tblBarang.getSelectedRow() >= 0) {
+            return Integer.parseInt(tblBarang
+                           .getModel()
+                           .getValueAt(tblBarang.getSelectedRow(), 0)
+                           .toString());   
+        } 
+        return null;
+    }
+        
+        /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -115,30 +121,35 @@ public class BarangForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblSupplier = new javax.swing.JLabel();
-        lblNamaBarang = new javax.swing.JLabel();
-        txtNamaBarang = new javax.swing.JTextField();
-        lblJmlBarang = new javax.swing.JLabel();
-        txtJmlBarang = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBarang = new javax.swing.JTable();
-        lblHarga = new javax.swing.JLabel();
-        txtHarga = new javax.swing.JTextField();
-        btnSimpan = new javax.swing.JButton();
-        btnHapus = new javax.swing.JButton();
         txtCariBarang = new javax.swing.JTextField();
         lblCariBarang = new javax.swing.JLabel();
-        cbSupplier = new javax.swing.JComboBox();
-        btnReset = new javax.swing.JButton();
+        frameInfo = new javax.swing.JPanel();
+        txtNamaBarang = new javax.swing.JTextField();
+        lblJmlBarang = new javax.swing.JLabel();
         lblNamaBarang1 = new javax.swing.JLabel();
         txtKodeBarang = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        txtHarga = new javax.swing.JTextField();
+        lblNamaBarang = new javax.swing.JLabel();
+        lblStock = new javax.swing.JLabel();
+        txtJmlBarang = new javax.swing.JTextField();
+        btnSimpan = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
+        lblHarga2 = new javax.swing.JLabel();
         mbItem = new javax.swing.JMenuBar();
-        btnLogOut = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
         todayDate = new javax.swing.JMenu();
         userSession = new javax.swing.JMenu();
+        btnLogOut = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        btnTransaction = new javax.swing.JMenu();
+        menuPurchase = new javax.swing.JMenuItem();
+        menuPenjualan = new javax.swing.JMenuItem();
+
+        jScrollPane2.setViewportView(jEditorPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Form Barang");
@@ -147,21 +158,6 @@ public class BarangForm extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-
-        lblSupplier.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lblSupplier.setText("Supplier");
-
-        lblNamaBarang.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lblNamaBarang.setText("Nama Barang");
-
-        txtNamaBarang.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNamaBarangKeyReleased(evt);
-            }
-        });
-
-        lblJmlBarang.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lblJmlBarang.setText("Jumlah Barang");
 
         tblBarang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -179,10 +175,79 @@ public class BarangForm extends javax.swing.JFrame {
                 tblBarangMouseClicked(evt);
             }
         });
+        tblBarang.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                tblBarangCaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
         jScrollPane1.setViewportView(tblBarang);
 
-        lblHarga.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lblHarga.setText("Harga Barang");
+        txtCariBarang.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariBarangKeyReleased(evt);
+            }
+        });
+
+        lblCariBarang.setText("Cari :");
+
+        frameInfo.setToolTipText("");
+
+        txtNamaBarang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNamaBarangActionPerformed(evt);
+            }
+        });
+        txtNamaBarang.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNamaBarangKeyReleased(evt);
+            }
+        });
+
+        lblJmlBarang.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblJmlBarang.setText("Harga Barang");
+
+        lblNamaBarang1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblNamaBarang1.setText("Kode Barang");
+
+        txtKodeBarang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKodeBarangActionPerformed(evt);
+            }
+        });
+        txtKodeBarang.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtKodeBarangKeyReleased(evt);
+            }
+        });
+
+        txtHarga.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtHargaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtHargaFocusLost(evt);
+            }
+        });
+        txtHarga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHargaActionPerformed(evt);
+            }
+        });
+        txtHarga.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHargaKeyTyped(evt);
+            }
+        });
+
+        lblNamaBarang.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblNamaBarang.setText("Nama Barang");
+
+        lblStock.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblStock.setText("Stok Barang");
+
+        txtJmlBarang.setEditable(false);
 
         btnSimpan.setText("SIMPAN");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
@@ -198,21 +263,6 @@ public class BarangForm extends javax.swing.JFrame {
             }
         });
 
-        txtCariBarang.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCariBarangKeyReleased(evt);
-            }
-        });
-
-        lblCariBarang.setText("Cari :");
-
-        cbSupplier.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbSupplier.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbSupplierActionPerformed(evt);
-            }
-        });
-
         btnReset.setText("RESET");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,20 +270,57 @@ public class BarangForm extends javax.swing.JFrame {
             }
         });
 
-        lblNamaBarang1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lblNamaBarang1.setText("Kode Barang");
+        javax.swing.GroupLayout frameInfoLayout = new javax.swing.GroupLayout(frameInfo);
+        frameInfo.setLayout(frameInfoLayout);
+        frameInfoLayout.setHorizontalGroup(
+            frameInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameInfoLayout.createSequentialGroup()
+                .addGroup(frameInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(frameInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtKodeBarang, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                        .addComponent(txtNamaBarang, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblJmlBarang, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblNamaBarang, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblNamaBarang1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtHarga, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(lblStock)
+                    .addComponent(txtJmlBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(frameInfoLayout.createSequentialGroup()
+                        .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+        frameInfoLayout.setVerticalGroup(
+            frameInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameInfoLayout.createSequentialGroup()
+                .addComponent(lblNamaBarang1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtKodeBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblNamaBarang)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtNamaBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblJmlBarang)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblStock)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtJmlBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(frameInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSimpan)
+                    .addComponent(btnHapus)
+                    .addComponent(btnReset))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
-        jLabel1.setText("Rp.");
-
-        btnLogOut.setText("Server");
-
-        jMenuItem1.setText("Log Out");
-        btnLogOut.add(jMenuItem1);
-
-        mbItem.add(btnLogOut);
-
-        jMenu2.setText("Form");
-        mbItem.add(jMenu2);
+        lblHarga2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblHarga2.setText("Daftar Barang");
 
         todayDate.setText("Date");
         mbItem.add(todayDate);
@@ -241,107 +328,86 @@ public class BarangForm extends javax.swing.JFrame {
         userSession.setText("User");
         mbItem.add(userSession);
 
+        btnLogOut.setText("Server");
+
+        jMenuItem1.setText("Log Out");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        btnLogOut.add(jMenuItem1);
+
+        mbItem.add(btnLogOut);
+
+        btnTransaction.setText("Form");
+
+        menuPurchase.setText("Purchase");
+        menuPurchase.setToolTipText("");
+        menuPurchase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPurchaseActionPerformed(evt);
+            }
+        });
+        btnTransaction.add(menuPurchase);
+
+        menuPenjualan.setText("Penjualan");
+        btnTransaction.add(menuPenjualan);
+
+        mbItem.add(btnTransaction);
+
         setJMenuBar(mbItem);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addComponent(frameInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblHarga2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblCariBarang)
                         .addGap(18, 18, 18)
-                        .addComponent(txtCariBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblJmlBarang)
-                                .addComponent(txtJmlBarang)
-                                .addComponent(lblNamaBarang)
-                                .addComponent(txtNamaBarang)
-                                .addComponent(lblSupplier)
-                                .addComponent(lblHarga)
-                                .addComponent(cbSupplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jLabel1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblNamaBarang1)
-                            .addComponent(txtKodeBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(29, 29, 29))
+                        .addComponent(txtCariBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(16, 16, 16))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCariBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCariBarang))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblSupplier)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblNamaBarang1)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtKodeBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblNamaBarang)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtNamaBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblJmlBarang)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtJmlBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblHarga)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGap(57, 57, 57)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnSimpan)
-                            .addComponent(btnHapus)
-                            .addComponent(btnReset)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtCariBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblCariBarang))
+                            .addComponent(lblHarga2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(frameInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        flagUpdate = false;
-        clearForm();
-    }//GEN-LAST:event_btnResetActionPerformed
-
     private void tblBarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBarangMouseClicked
         flagUpdate = true;
         int row = tblBarang.getSelectedRow();
-        
         TableModel model = tblBarang.getModel();
-        
-        txtKodeBarang.setText(model.getValueAt(row, 0).toString());
-        txtNamaBarang.setText(model.getValueAt(row, 1).toString());
-        txtJmlBarang.setText(model.getValueAt(row, 2).toString());
-        txtHarga.setText(model.getValueAt(row, 3).toString());
-        cbSupplier.setSelectedItem(model.getValueAt(row, 4).toString());
-        
-        btnHapus.setEnabled(true);
+        txtKodeBarang.setText(model.getValueAt(row, 1).toString());
+        txtNamaBarang.setText(model.getValueAt(row, 2).toString());
+        txtJmlBarang.setText(NumberFormat.getInstance().format(Integer.parseInt(model.getValueAt(row, 3).toString())));
+        txtHarga.setText(util.formatCurrency(Long.parseLong(model.getValueAt(row, 4).toString())));
+        btnHapus.setVisible(true);
+        stockComponentVisible(true);
     }//GEN-LAST:event_tblBarangMouseClicked
 
     private void txtCariBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariBarangKeyReleased
@@ -349,79 +415,6 @@ public class BarangForm extends javax.swing.JFrame {
         tblBarang.setModel(DbUtils.resultSetToTableModel(dao.setBarangTable(param)));
         util.adjustColumn(tblBarang);
     }//GEN-LAST:event_txtCariBarangKeyReleased
-
-    private void cbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSupplierActionPerformed
-        String supplier = (String) cbSupplier.getSelectedItem();
-        String[] arrSupp = supplier.split(" - ");
-        kodeSupplier = arrSupp[0];
-    }//GEN-LAST:event_cbSupplierActionPerformed
-
-    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        boolean result = false;
-        
-        try{
-            entity.setKodeBarang(txtKodeBarang.getText());
-            entity.setNamaBarang(txtNamaBarang.getText());
-            entity.setJumlahBarang(Integer.parseInt(txtJmlBarang.getText()));
-            entity.setHargaBarang(Integer.parseInt(txtHarga.getText()));
-            entity.setKodeSupplier(kodeSupplier);
-            if(txtNamaBarang.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Nama Barang Tidak Boleh Kosong!");
-            }else if(cbSupplier.getSelectedIndex() == 0){
-                JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Supplier Terlebih Dulu!");
-            }else{
-                int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
-                if(confirm == 0){
-                    if(!flagUpdate){
-                        result = dao.addBarang(entity);
-                        if(result){
-                            JOptionPane.showMessageDialog(rootPane, "Berhasil simpan barang!");
-                            setupTable();
-                            clearForm();
-                        }else{
-                            JOptionPane.showMessageDialog(rootPane, "Error simpan barang!");
-                        }
-                    }else{
-                        result = dao.editBarang(entity);
-                        if(result){
-                            JOptionPane.showMessageDialog(rootPane, "Berhasil update barang!");
-                            setupTable();
-                            clearForm();
-                        }else{
-                            JOptionPane.showMessageDialog(rootPane, "Error update barang!");
-                        }
-                    }
-                }
-            }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error simpan barang! "+e);
-        }
-    }//GEN-LAST:event_btnSimpanActionPerformed
-
-    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        boolean result = false;
-        String kodeBarang = txtKodeBarang.getText();
-        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menghapus data?","Simpan Data",JOptionPane.YES_NO_OPTION);
-        try{
-            if(confirm==0){
-                result = dao.deleteBarang(kodeBarang);
-                if(result){
-                    JOptionPane.showMessageDialog(rootPane, "Berhasil hapus barang! ");
-                    setupTable();
-                    clearForm();
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Error hapus barang! ");
-                }
-            }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error hapus barang! "+e);
-        }
-    }//GEN-LAST:event_btnHapusActionPerformed
-
-    private void txtNamaBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaBarangKeyReleased
-        String namaBarang = txtNamaBarang.getText().toUpperCase();
-        txtNamaBarang.setText(namaBarang);
-    }//GEN-LAST:event_txtNamaBarangKeyReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if (JOptionPane.showConfirmDialog(this, 
@@ -432,24 +425,136 @@ public class BarangForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        this.setVisible(false);
+        new LoginForm().setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        flagUpdate = false;
+        clearForm();
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        String kodeBarang = txtKodeBarang.getText();
+        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menghapus data?","Simpan Data",JOptionPane.YES_NO_OPTION);
+        try{
+            if(confirm==0){
+                if(dao.deleteBarang(kodeBarang)){
+                    JOptionPane.showMessageDialog(rootPane, "Berhasil hapus barang! ");
+                    setupTable();
+                    clearForm();
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Error hapus barang! ");
+                }
+            }
+        }catch(HeadlessException e){
+            JOptionPane.showMessageDialog(rootPane, "Error hapus barang! "+e);
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        try{            
+            entity.setKodeBarang(txtKodeBarang.getText());
+            entity.setNamaBarang(txtNamaBarang.getText());
+            entity.setHargaBarang(util.deFormatCurrency(txtHarga.getText()).intValue());
+            
+            if (txtNamaBarang.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Nama Barang Tidak Boleh Kosong!");
+            } else if (txtKodeBarang.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Kode Barang Tidak Boleh Kosong!");
+            } else if (dao.isExistByKodeBarang(txtKodeBarang.getText(), getSelectedIdBarang())) {
+                JOptionPane.showMessageDialog(this, "Kode Barang Tidak Boleh Duplikat!");
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menyimpan data?","Simpan Data",JOptionPane.YES_NO_OPTION);
+                if(confirm == 0){
+                    if(!flagUpdate){
+                        if(dao.addBarang(entity)){
+                            JOptionPane.showMessageDialog(rootPane, "Berhasil simpan barang!");
+                            setupTable();
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane, "Error simpan barang!");
+                        }
+                    }else{
+                        entity.setIdBarang(getSelectedIdBarang());
+                        if(dao.editBarang(entity)){
+                            JOptionPane.showMessageDialog(rootPane, "Berhasil update barang!");
+                            setupTable();
+                            clearForm();
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane, "Error update barang!");
+                        }
+                    }
+                }
+            }
+        }catch(HeadlessException | NumberFormatException e){
+            JOptionPane.showMessageDialog(rootPane, "Error simpan barang! "+e);
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void txtHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHargaActionPerformed
+
+    private void txtNamaBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaBarangKeyReleased
+        UIUtil.toUppperCase(txtNamaBarang);
+    }//GEN-LAST:event_txtNamaBarangKeyReleased
+
+    private void txtNamaBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaBarangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNamaBarangActionPerformed
+
+    private void txtKodeBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKodeBarangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtKodeBarangActionPerformed
+
+    private void txtHargaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHargaFocusGained
+        UIUtil.toDeCurrencyFormat(txtHarga);
+    }//GEN-LAST:event_txtHargaFocusGained
+
+    private void txtHargaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHargaFocusLost
+        UIUtil.toCurrencyFormat(txtHarga);
+    }//GEN-LAST:event_txtHargaFocusLost
+
+    private void tblBarangCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tblBarangCaretPositionChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblBarangCaretPositionChanged
+
+    private void txtHargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHargaKeyTyped
+        UIUtil.checkOnlyNumber(evt);
+    }//GEN-LAST:event_txtHargaKeyTyped
+
+    private void txtKodeBarangKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKodeBarangKeyReleased
+        UIUtil.toUppperCase(txtKodeBarang);
+    }//GEN-LAST:event_txtKodeBarangKeyReleased
+
+    private void menuPurchaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPurchaseActionPerformed
+        this.dispose();
+        new PurchaseListForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuPurchaseActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHapus;
     private javax.swing.JMenu btnLogOut;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSimpan;
-    private javax.swing.JComboBox cbSupplier;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu btnTransaction;
+    private javax.swing.JPanel frameInfo;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblCariBarang;
-    private javax.swing.JLabel lblHarga;
+    private javax.swing.JLabel lblHarga2;
     private javax.swing.JLabel lblJmlBarang;
     private javax.swing.JLabel lblNamaBarang;
     private javax.swing.JLabel lblNamaBarang1;
-    private javax.swing.JLabel lblSupplier;
+    private javax.swing.JLabel lblStock;
     private javax.swing.JMenuBar mbItem;
+    private javax.swing.JMenuItem menuPenjualan;
+    private javax.swing.JMenuItem menuPurchase;
     private javax.swing.JTable tblBarang;
     private javax.swing.JMenu todayDate;
     private javax.swing.JTextField txtCariBarang;

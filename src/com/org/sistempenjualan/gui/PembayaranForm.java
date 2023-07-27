@@ -88,6 +88,7 @@ public class PembayaranForm extends javax.swing.JFrame {
         txtTglTransaksi.setMinSelectableDate(new Date());
         txtTglBayar.getCalendar();
         txtTglBayar.setMinSelectableDate(new Date());
+        txtTglBayar.setEnabled(true);
     }
     
     public void setupTable(){
@@ -586,6 +587,8 @@ public class PembayaranForm extends javax.swing.JFrame {
         String metodePembayaran = "";
         if(cbMetodePembayaran.getSelectedIndex() != 0){
             metodePembayaran = (String) cbMetodePembayaran.getSelectedItem();
+        }else{
+            metodePembayaran = "";
         }
         String jenisPembayaran = "";
         if(cbJenisPembayaran.getSelectedIndex() != 0){
@@ -608,6 +611,7 @@ public class PembayaranForm extends javax.swing.JFrame {
                 result = dao.createPembayaran(entity);
                 if(result){
                     JOptionPane.showMessageDialog(null, "Transaksi berhasil disimpan!");
+                    getListPemesanan();
                     clearForm();
                     setupTable();
                 }else{
@@ -617,6 +621,7 @@ public class PembayaranForm extends javax.swing.JFrame {
                 result = dao.updatePembayaran(entity);
                 if(result){
                     JOptionPane.showMessageDialog(null, "Transaksi berhasil diupdate!");
+                    getListPemesanan();
                     clearForm();
                     setupTable();
                 }else{
@@ -654,10 +659,11 @@ public class PembayaranForm extends javax.swing.JFrame {
     private void cbMetodePembayaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMetodePembayaranActionPerformed
         if(cbMetodePembayaran.getSelectedIndex() == 1){
             cbJenisPembayaran.setEnabled(false);
-            txtTglBayar.setEnabled(true);
+            cbJenisPembayaran.setSelectedIndex(0);
+//            txtTglBayar.setEnabled(true);
         }else if(cbMetodePembayaran.getSelectedIndex() == 2){
             cbJenisPembayaran.setEnabled(true);
-            txtTglBayar.setEnabled(false);
+//            txtTglBayar.setEnabled(false);
             ((JTextField)txtTglBayar.getDateEditor().getUiComponent()).setText("");
         }
     }//GEN-LAST:event_cbMetodePembayaranActionPerformed
@@ -666,8 +672,19 @@ public class PembayaranForm extends javax.swing.JFrame {
         int totalBayar = 0;
         totalBayar = Integer.parseInt(txtTotalBayar.getText());
         int dibayar = 0;
-        dibayar = Integer.parseInt(txtYangDibayar.getText());
+        if(txtYangDibayar.getText().equals("")){
+            dibayar = 0;
+            txtYangDibayar.setText(String.valueOf(dibayar));
+        }else{
+            dibayar = Integer.parseInt(txtYangDibayar.getText());
+            txtYangDibayar.setText(String.valueOf(dibayar));
+        }
         int selisih = 0;
+        if(dibayar <= 0){
+            dibayar = 0;
+            txtYangDibayar.setText(String.valueOf(dibayar));
+        }
+        
         
         selisih = totalBayar - dibayar;
         txtSelisih.setText(String.valueOf(selisih));
@@ -758,11 +775,11 @@ public class PembayaranForm extends javax.swing.JFrame {
         }else{
             txtYangDibayar.setText("0");
         }
-        if(model.getValueAt(row, 12) != null){
-            txtSelisih.setText(model.getValueAt(row, 12).toString());
-        }else{
-            txtSelisih.setText("0");
-        }
+        
+        int dibayar = Integer.parseInt(model.getValueAt(row, 11).toString());
+        int totalBayar = Integer.parseInt(model.getValueAt(row, 10).toString());
+        int selisih = totalBayar - dibayar;
+        txtSelisih.setText(String.valueOf(selisih));
     }//GEN-LAST:event_tblPembayaranMouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

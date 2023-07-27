@@ -55,13 +55,14 @@ public class ReportBulananForm extends javax.swing.JFrame {
         setupTable();
     }
     
-    public void cetakReport(String tglReport){
+    public void cetakReport(String tglAwal, String tglAkhir){
         try {
             String namaFile = "src"+File.separator+"com"+File.separator+"org"+File.separator+"sistempenjualan"+File.separator+"report"+File.separator+"ReportBulanan.jasper";
             Connection conn = DbConnect.ConnectDb();
 
             Map<String,Object> map =  new HashMap<String, Object>();
-            map.put("periode", tglReport);
+            map.put("periode", tglAwal);
+            map.put("periode2", tglAkhir);
             JasperPrint jprint = JasperFillManager.fillReport(namaFile.toString(), map, conn);
             if(jprint.getPages().size() != 0){
                 JasperViewer.viewReport(jprint,false);
@@ -75,7 +76,7 @@ public class ReportBulananForm extends javax.swing.JFrame {
     }
     
     public void setupTable(){
-            tblReport.setModel(DbUtils.resultSetToTableModel(dao.getReportBulanan("")));
+            tblReport.setModel(DbUtils.resultSetToTableModel(dao.getReportBulanan("","")));
             tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
             tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
             tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
@@ -96,6 +97,8 @@ public class ReportBulananForm extends javax.swing.JFrame {
         tblReport = new javax.swing.JTable();
         btnCari = new javax.swing.JButton();
         btnCetak = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        tglAkhir = new com.toedter.calendar.JDateChooser();
         mbReportBulanan = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btnLogOut = new javax.swing.JMenuItem();
@@ -141,6 +144,10 @@ public class ReportBulananForm extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Sampai");
+
+        tglAkhir.setDateFormatString("yyyy-MM-dd");
+
         jMenu1.setText("File");
 
         btnLogOut.setText("Log Out");
@@ -184,6 +191,10 @@ public class ReportBulananForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtTglReport, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(tglAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -197,7 +208,9 @@ public class ReportBulananForm extends javax.swing.JFrame {
                     .addComponent(txtTglReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnCari)
-                        .addComponent(btnCetak)))
+                        .addComponent(btnCetak)
+                        .addComponent(jLabel1))
+                    .addComponent(tglAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(64, Short.MAX_VALUE))
@@ -218,8 +231,9 @@ public class ReportBulananForm extends javax.swing.JFrame {
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         String param = ((JTextField)txtTglReport.getDateEditor().getUiComponent()).getText();
+        String param2 = ((JTextField)tglAkhir.getDateEditor().getUiComponent()).getText();
         if(!param.equals("")){
-            tblReport.setModel(DbUtils.resultSetToTableModel(dao.getReportBulanan(param)));
+            tblReport.setModel(DbUtils.resultSetToTableModel(dao.getReportBulanan(param, param2)));
             tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
             tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
             tblReport.removeColumn(tblReport.getColumnModel().getColumn(0));
@@ -231,8 +245,9 @@ public class ReportBulananForm extends javax.swing.JFrame {
 
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
         String tanggal = ((JTextField)txtTglReport.getDateEditor().getUiComponent()).getText();
-        if(!tanggal.equals("")){
-            cetakReport(tanggal);
+        String tanggal2 = ((JTextField)tglAkhir.getDateEditor().getUiComponent()).getText();
+        if(!tanggal.equals("") && !tanggal2.equals("")){
+            cetakReport(tanggal, tanggal2);
         }else{
             JOptionPane.showMessageDialog(rootPane, "Silahkan Pilih Tanggal Terlebih Dulu!");
         }
@@ -253,12 +268,14 @@ public class ReportBulananForm extends javax.swing.JFrame {
     private javax.swing.JButton btnCari;
     private javax.swing.JButton btnCetak;
     private javax.swing.JMenuItem btnLogOut;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar mbReportBulanan;
     private javax.swing.JTable tblReport;
+    private com.toedter.calendar.JDateChooser tglAkhir;
     private javax.swing.JMenu todayDate;
     private com.toedter.calendar.JDateChooser txtTglReport;
     private javax.swing.JMenu userSession;

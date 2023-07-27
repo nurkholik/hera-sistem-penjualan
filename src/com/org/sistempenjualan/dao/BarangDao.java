@@ -7,6 +7,7 @@ package com.org.sistempenjualan.dao;
 
 import com.org.sistempenjualan.entity.Entity;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -27,4 +28,5 @@ public interface BarangDao {
     public Vector getListBarang();
     public boolean updateStokBarang(String kodeBarang, int jumlah);
     public boolean returnStokBarang(String kodeBarang, int jumlah);
+    public boolean isExistByKodeBarang(String kodeBarang, Integer idBarang);
 }

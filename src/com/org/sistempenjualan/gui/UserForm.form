@@ -24,21 +24,6 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu2">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Form"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuSupplier">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Form Supplier"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSupplierActionPerformed"/>
-              </Events>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
         <Menu class="javax.swing.JMenu" name="todayDate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Date"/>
@@ -208,13 +193,14 @@
     <Component class="javax.swing.JComboBox" name="cbRoleUser">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="6">
+          <StringArray count="7">
             <StringItem index="0" value="-- Pilih Role --"/>
             <StringItem index="1" value="Admin"/>
             <StringItem index="2" value="Inventory"/>
             <StringItem index="3" value="Kasir"/>
             <StringItem index="4" value="Kurir"/>
             <StringItem index="5" value="Registrasi"/>
+            <StringItem index="6" value="Direktur"/>
           </StringArray>
         </Property>
       </Properties>

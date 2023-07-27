@@ -40,7 +40,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
                     "DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', "+
                     "a.total_bayar as 'Total Bayar', "+
                     "a.yang_dibayar as 'Yang Dibayarkan', "+
-                    "a.selisih Selisih, "+
+                    //"a.selisih Selisih, "+
                     "a.tanggal_entri as 'Tanggal Entri', "+
                     "a.update_by NIK "+
                     "FROM transaksi a "+
@@ -73,7 +73,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
                     "DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', "+
                     "a.total_bayar as 'Total Bayar', "+
                     "a.yang_dibayar as 'Yang Dibayarkan', "+
-                    "a.selisih Selisih, "+
+//                    "a.selisih Selisih, "+
                     "a.tanggal_entri as 'Tanggal Entri', "+
                     "a.update_by NIK "+
                     "FROM transaksi a "+
@@ -199,7 +199,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
     }
 
     @Override
-    public ResultSet getReportBulanan(String tglAwal) {
+    public ResultSet getReportBulanan(String tglAwal, String tglAkhir) {
         ResultSet res = null;
         try{
           String sql = "SELECT a.id_transaksi, \n" +
@@ -214,7 +214,7 @@ public class PembayaranDaoImpl implements PembayaranDao{
                         "DATE_FORMAT(a.tanggal_bayar,'%d %M %Y') as 'Tanggal Bayar', \n" +
                         "a.total_bayar as 'Total Bayar', \n" +
                         "a.yang_dibayar as 'Yang Dibayarkan', \n" +
-                        "a.selisih Selisih, \n" +
+//                        "a.selisih Selisih, \n" +
                         "a.tanggal_entri as 'Tanggal Entri', \n" +
                         "a.update_by NIK \n" +
                         "FROM transaksi a \n" +
@@ -222,15 +222,22 @@ public class PembayaranDaoImpl implements PembayaranDao{
                         "ON a.id_pemesanan = b.id_pemesanan \n" +
                         "LEFT JOIN surat_jalan c \n" +
                         "ON b.id_pemesanan = c.id_pemesanan \n" +
-                        "WHERE DATE_FORMAT(a.tanggal_transaksi, '%M %Y') = DATE_FORMAT(?,'%M %Y')\n" +
+                        "WHERE DATE_FORMAT(a.tanggal_transaksi, '%d %M %Y') BETWEEN DATE_FORMAT(?,'%d %M %Y') "
+                        + "AND DATE_FORMAT(?,'%d %M %Y')\n" +
                         "ORDER BY a.no_transaksi DESC ";
             pst = con.prepareStatement(sql);
             pst.setString(1, tglAwal);
+            pst.setString(2, tglAkhir);
             res = pst.executeQuery();  
         } catch (SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null,"Error set Data Table ("+e.toString()+")");
         }
         return res;
+    }
+
+    @Override
+    public ResultSet setPembayaranTable(String param, String param2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

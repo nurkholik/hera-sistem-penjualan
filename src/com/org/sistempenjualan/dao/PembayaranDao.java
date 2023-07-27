@@ -16,9 +16,10 @@ import java.util.Vector;
 public interface PembayaranDao {
     public ResultSet setPembayaranTable();
     public ResultSet setPembayaranTable(String param);
+    public ResultSet setPembayaranTable(String param, String param2);
     public int getIdPembayaran(String noTransaksi);
     public boolean createPembayaran(Entity entity);
     public boolean updatePembayaran(Entity entity);
     public String getLastNoPembayaran();
-    public ResultSet getReportBulanan(String tglAwal);
+    public ResultSet getReportBulanan(String tglAwal, String tglAkhir);
 }
