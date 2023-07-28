@@ -22,7 +22,7 @@ import net.proteanit.sql.DbUtils;
  *
  * @author user
  */
-public class PurchaseApprovalForm extends javax.swing.JFrame {
+public class GoodsOrderApprovalForm extends javax.swing.JFrame {
 
     private final TransPurchaseDao purchaseDao = new TransPurchaseDaoImpl();
     private Utility util = new Utility();
@@ -32,7 +32,7 @@ public class PurchaseApprovalForm extends javax.swing.JFrame {
      * Creates new form ApprovalForm
      * @param entity
      */
-    public PurchaseApprovalForm(Entity entity) {
+    public GoodsOrderApprovalForm(Entity entity) {
         initComponents();
         setupWindow();
         setupUserInfo(entity);
@@ -65,10 +65,10 @@ public class PurchaseApprovalForm extends javax.swing.JFrame {
         btnLogOut = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         form = new javax.swing.JMenu();
-        menuPenjualan = new javax.swing.JMenuItem();
+        menu1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Purchase Request");
+        setTitle("Goods Order");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -141,13 +141,13 @@ public class PurchaseApprovalForm extends javax.swing.JFrame {
 
         form.setText("Form");
 
-        menuPenjualan.setText("Penjualan");
-        menuPenjualan.addActionListener(new java.awt.event.ActionListener() {
+        menu1.setText("Office Supplies Order Approval");
+        menu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuPenjualanActionPerformed(evt);
+                menu1ActionPerformed(evt);
             }
         });
-        form.add(menuPenjualan);
+        form.add(menu1);
 
         mbItem.add(form);
 
@@ -220,13 +220,14 @@ public class PurchaseApprovalForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbStatusActionPerformed
 
-    private void menuPenjualanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPenjualanActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuPenjualanActionPerformed
+    private void menu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu1ActionPerformed
+        this.dispose();
+        new OfficeSuppliesOrderApprovalForm(entity).setVisible(true);
+    }//GEN-LAST:event_menu1ActionPerformed
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
-        new PurchaseForm(this, entity).show(getSelectedID(), 
-                PurchaseForm.VIEW, 
+        new GoodsOrderDetailForm(this, entity).show(getSelectedID(), 
+                GoodsOrderDetailForm.VIEW, 
                 () -> loadDataTable());
     }//GEN-LAST:event_btnDetailActionPerformed
 
@@ -248,7 +249,7 @@ public class PurchaseApprovalForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar mbItem;
-    private javax.swing.JMenuItem menuPenjualan;
+    private javax.swing.JMenuItem menu1;
     private javax.swing.JTable tblRequest;
     private javax.swing.JMenu todayDate;
     private javax.swing.JMenu userSession;

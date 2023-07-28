@@ -342,7 +342,7 @@ public class BarangForm extends javax.swing.JFrame {
 
         btnTransaction.setText("Form");
 
-        menuPurchase.setText("Purchase");
+        menuPurchase.setText("Goods Order");
         menuPurchase.setToolTipText("");
         menuPurchase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -351,7 +351,12 @@ public class BarangForm extends javax.swing.JFrame {
         });
         btnTransaction.add(menuPurchase);
 
-        menuPenjualan.setText("Penjualan");
+        menuPenjualan.setText("Office Supplies Order");
+        menuPenjualan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPenjualanActionPerformed(evt);
+            }
+        });
         btnTransaction.add(menuPenjualan);
 
         mbItem.add(btnTransaction);
@@ -531,8 +536,13 @@ public class BarangForm extends javax.swing.JFrame {
 
     private void menuPurchaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPurchaseActionPerformed
         this.dispose();
-        new PurchaseListForm(entity).setVisible(true);
+        new GoodsOrderForm(entity).setVisible(true);
     }//GEN-LAST:event_menuPurchaseActionPerformed
+
+    private void menuPenjualanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPenjualanActionPerformed
+        this.dispose();
+        new OfficeSuppliesOrderForm(entity).setVisible(true);
+    }//GEN-LAST:event_menuPenjualanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -32,7 +32,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author user
  */
-public class PurchaseForm extends javax.swing.JFrame {
+public class GoodsOrderDetailForm extends javax.swing.JFrame {
 
     private DefaultTableModel model = new DefaultTableModel();
     private final Entity entity;
@@ -53,7 +53,7 @@ public class PurchaseForm extends javax.swing.JFrame {
      * @param parent
      * @param entity
      */
-    public PurchaseForm(Window parent, Entity entity) {
+    public GoodsOrderDetailForm(Window parent, Entity entity) {
         this.util = new Utility();
         initComponents();
         clear();
@@ -66,8 +66,8 @@ public class PurchaseForm extends javax.swing.JFrame {
         void onSubmit();
     }
     
-    private final PurchaseDetailForm.ActionListener detailActionListener = 
-            new PurchaseDetailForm.ActionListener() {
+    private final GoodsOrderItemForm.ActionListener detailActionListener = 
+            new GoodsOrderItemForm.ActionListener() {
         @Override
         public void onUpdated(TransPurchaseDetail item) {
             model.setValueAt(
@@ -104,7 +104,7 @@ public class PurchaseForm extends javax.swing.JFrame {
         if (purchaseId != null) 
             loadPurchaseData(purchaseId);
         
-        modelDialog.setTitle((FLAG == EDIT ? "Edit" : FLAG == ADD ? "Create" : "Detail") + " Purchase Request");
+        modelDialog.setTitle((FLAG == EDIT ? "Edit" : FLAG == ADD ? "Create" : "Detail") + " Request");
         modelDialog.setVisible(true);
     }
     
@@ -215,7 +215,7 @@ public class PurchaseForm extends javax.swing.JFrame {
         item.setKodeBarang(tblItem.getValueAt(row, 0).toString());
         item.setNamaBarang(tblItem.getValueAt(row, 1).toString());
         item.setJumlahBarang(Integer.parseInt(tblItem.getValueAt(row, 2).toString()));
-        new PurchaseDetailForm(this).show(
+        new GoodsOrderItemForm(this).show(
                 item, 
                 FLAG,
                 detailActionListener, 
@@ -284,7 +284,7 @@ public class PurchaseForm extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jEditorPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Purchase");
+        setTitle("Goods Order Detail");
         setResizable(false);
 
         txtProject.addActionListener(new java.awt.event.ActionListener() {
@@ -409,9 +409,7 @@ public class PurchaseForm extends javax.swing.JFrame {
             .addGroup(panelApprovalLayout.createSequentialGroup()
                 .addGroup(panelApprovalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblUserApprove)
-                    .addGroup(panelApprovalLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel2)))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelApprovalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(userApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -545,26 +543,26 @@ public class PurchaseForm extends javax.swing.JFrame {
             purchase.setDetails(details);
             if (FLAG == ADD) {
                 if (purchaseDao.add(purchase)) {
-                    JOptionPane.showMessageDialog(null, "Pengajuan purchase berhasil dibuat.");
+                    JOptionPane.showMessageDialog(null, "Pengajuan berhasil dibuat.");
                     actionListener.onSubmit();
                     dismis();
                 } else
-                    JOptionPane.showMessageDialog(null, "Pengajuan purchase gagal dibuat!");                
+                    JOptionPane.showMessageDialog(null, "Pengajuan gagal dibuat!");                
             } 
             if (FLAG == EDIT) {
                 purchase.setId(this.purchaseId);
                 if (purchaseDao.update(purchase)) {
-                    JOptionPane.showMessageDialog(null, "Pengajuan purchase berhasil diperbarui.");
+                    JOptionPane.showMessageDialog(null, "Pengajuan berhasil diperbarui.");
                     actionListener.onSubmit();
                     dismis();
                 } else
-                    JOptionPane.showMessageDialog(null, "Pengajuan purchase gagal diperbarui!");
+                    JOptionPane.showMessageDialog(null, "Pengajuan gagal diperbarui!");
             }
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
-        new PurchaseDetailForm(this).show(null, PurchaseDetailForm.ADD, detailActionListener, getExistCode());
+        new GoodsOrderItemForm(this).show(null, GoodsOrderItemForm.ADD, detailActionListener, getExistCode());
     }//GEN-LAST:event_btnAddItemActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -576,11 +574,11 @@ public class PurchaseForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        openDetail(PurchaseDetailForm.EDIT);
+        openDetail(GoodsOrderItemForm.EDIT);
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
-        openDetail(PurchaseDetailForm.VIEW);
+        openDetail(GoodsOrderItemForm.VIEW);
     }//GEN-LAST:event_btnDetailActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed

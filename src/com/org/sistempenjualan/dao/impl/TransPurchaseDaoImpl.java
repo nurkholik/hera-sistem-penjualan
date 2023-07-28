@@ -194,7 +194,7 @@ public class TransPurchaseDaoImpl implements TransPurchaseDao {
             con.setAutoCommit(false);
             
             stmt = con.prepareStatement("UPDATE trans_purchase SET project = ?, department = ?, "
-                            + "status = (CASE WHEN status = '"+ApprovalStatus.NEED_REVISED+"' THEN '"+ApprovalStatus.REJECTED+"' ELSE status END) "
+                            + "status = (CASE WHEN status = '"+ApprovalStatus.NEED_REVISED+"' THEN '"+ApprovalStatus.REQUESTED+"' ELSE status END) "
                             + "WHERE id = ?");
             stmt.setString(1, purchase.getProject());
             stmt.setString(2, purchase.getDepartment());

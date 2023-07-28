@@ -6,8 +6,8 @@ package com.org.sistempenjualan.gui;
 
 import com.org.sistempenjualan.Utility;
 import com.org.sistempenjualan.constant.ApprovalStatus;
-import com.org.sistempenjualan.dao.TransPurchaseDao;
-import com.org.sistempenjualan.dao.impl.TransPurchaseDaoImpl;
+import com.org.sistempenjualan.dao.TransSellDao;
+import com.org.sistempenjualan.dao.impl.TransSellDaoImpl;
 import com.org.sistempenjualan.entity.Entity;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,17 +22,16 @@ import net.proteanit.sql.DbUtils;
  *
  * @author user
  */
-public class PurchaseListForm extends javax.swing.JFrame {
+public class OfficeSuppliesOrderForm extends javax.swing.JFrame {
 
     private Entity entity;
     private final Utility util = new Utility();
-    private final TransPurchaseDao purchaseDao = new TransPurchaseDaoImpl();
+    private final TransSellDao sellDao = new TransSellDaoImpl();
     
     /**
-     * Creates new form PurchaseListForm
      * @param entity
      */
-    public PurchaseListForm(Entity entity) {
+    public OfficeSuppliesOrderForm(Entity entity) {
         initComponents();
         setupWindow();
         setupUserInfo(entity);
@@ -66,7 +65,7 @@ public class PurchaseListForm extends javax.swing.JFrame {
     }
     
     private void loadDataTable() {
-        ResultSet res = purchaseDao.findBy(
+        ResultSet res = sellDao.findBy(
                 dtRequestFrom.getDate(), 
                 dtRequestTo.getDate(), 
                 entity.getNik(), 
@@ -76,7 +75,7 @@ public class PurchaseListForm extends javax.swing.JFrame {
             tbl.setModel(DbUtils.resultSetToTableModel(res));
             util.adjustColumn(tbl);
         } else {
-            JOptionPane.showMessageDialog(null, "Gagal memuat data riwayat purchase!");
+            JOptionPane.showMessageDialog(null, "Gagal memuat data riwayat!");
         }
         setActionButtonVisibility();
     }
@@ -119,7 +118,7 @@ public class PurchaseListForm extends javax.swing.JFrame {
             btnDelete.setVisible(false);
             btnDetail.setVisible(false);
         } else {
-            String status = tbl.getValueAt(tbl.getSelectedRow(), 5).toString();
+            String status = tbl.getValueAt(tbl.getSelectedRow(), 4).toString();
             boolean isCanEdit = status.equals(ApprovalStatus.REQUESTED) || status.equals(ApprovalStatus.NEED_REVISED);
             btnEdit.setVisible(isCanEdit);
             btnDelete.setVisible(isCanEdit);
@@ -170,11 +169,11 @@ public class PurchaseListForm extends javax.swing.JFrame {
         btnLogOut = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         form = new javax.swing.JMenu();
-        menuBarang = new javax.swing.JMenuItem();
-        menuPenjualan = new javax.swing.JMenuItem();
+        menu1 = new javax.swing.JMenuItem();
+        menu2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Purchase");
+        setTitle("Office Supplies Order");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -195,7 +194,7 @@ public class PurchaseListForm extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tbl);
 
         lbl4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lbl4.setText("Purchase History");
+        lbl4.setText("History");
 
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -279,18 +278,23 @@ public class PurchaseListForm extends javax.swing.JFrame {
 
         form.setText("Form");
 
-        menuBarang.setText("Barang");
-        menuBarang.setToolTipText("");
-        menuBarang.setActionCommand("");
-        menuBarang.addActionListener(new java.awt.event.ActionListener() {
+        menu1.setText("Barang");
+        menu1.setToolTipText("");
+        menu1.setActionCommand("");
+        menu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuBarangActionPerformed(evt);
+                menu1ActionPerformed(evt);
             }
         });
-        form.add(menuBarang);
+        form.add(menu1);
 
-        menuPenjualan.setText("Penjualan");
-        form.add(menuPenjualan);
+        menu2.setText("Goods Order");
+        menu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu2ActionPerformed(evt);
+            }
+        });
+        form.add(menu2);
 
         mbItem.add(form);
 
@@ -337,7 +341,7 @@ public class PurchaseListForm extends javax.swing.JFrame {
                                         .addComponent(dtRequestTo, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(jButton2)))))
-                        .addContainerGap())))
+                        .addGap(16, 16, 16))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -381,17 +385,17 @@ public class PurchaseListForm extends javax.swing.JFrame {
         new LoginForm().setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void menuBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBarangActionPerformed
+    private void menu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu1ActionPerformed
         this.dispose();
         new BarangForm(entity).setVisible(true);
-    }//GEN-LAST:event_menuBarangActionPerformed
+    }//GEN-LAST:event_menu1ActionPerformed
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         loadDataTable();
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        new PurchaseForm(this, entity).show(null, PurchaseForm.ADD, () -> loadDataTable());
+        new OfficeSuppliesOrderDetailForm(this, entity).show(null, OfficeSuppliesOrderDetailForm.ADD, () -> loadDataTable());
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -403,31 +407,36 @@ public class PurchaseListForm extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin membatalkan pengajuan purchase ini?","Batalkan pengajuan", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Anda yakin ingin membatalkan pengajuan ini?","Batalkan pengajuan", JOptionPane.YES_NO_OPTION);
         if(confirm == 0){
-            if (purchaseDao.deleteById(Integer.parseInt(tbl.getValueAt(tbl.getSelectedRow(), 0).toString()))) {
-                JOptionPane.showMessageDialog(null, "Pengajuan purchase berhasil dibatalkan.");
+            if (sellDao.deleteById(Integer.parseInt(tbl.getValueAt(tbl.getSelectedRow(), 0).toString()))) {
+                JOptionPane.showMessageDialog(null, "Pengajuan berhasil dibatalkan.");
                 loadDataTable();
             } else
-                JOptionPane.showMessageDialog(null, "Gagal membatalkan pengajuan purchase !");
+                JOptionPane.showMessageDialog(null, "Gagal membatalkan pengajuan !");
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        new PurchaseForm(this, entity).show(
+        new OfficeSuppliesOrderDetailForm(this, entity).show(
                 Integer.valueOf(tbl.getValueAt(tbl.getSelectedRow(), 0).toString()), 
-                PurchaseForm.EDIT, () -> loadDataTable());
+                OfficeSuppliesOrderDetailForm.EDIT, () -> loadDataTable());
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
-        new PurchaseForm(this, entity).show(
+        new OfficeSuppliesOrderDetailForm(this, entity).show(
                 Integer.valueOf(tbl.getValueAt(tbl.getSelectedRow(), 0).toString()),
-                PurchaseForm.VIEW, () -> loadDataTable());
+                OfficeSuppliesOrderDetailForm.VIEW, () -> loadDataTable());
     }//GEN-LAST:event_btnDetailActionPerformed
 
     private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbStatusActionPerformed
+
+    private void menu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu2ActionPerformed
+        this.dispose();
+        new GoodsOrderForm(entity).setVisible(true);
+    }//GEN-LAST:event_menu2ActionPerformed
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreate;
@@ -448,8 +457,8 @@ public class PurchaseListForm extends javax.swing.JFrame {
     private javax.swing.JLabel lbl4;
     private javax.swing.JLabel lblCariBarang;
     private javax.swing.JMenuBar mbItem;
-    private javax.swing.JMenuItem menuBarang;
-    private javax.swing.JMenuItem menuPenjualan;
+    private javax.swing.JMenuItem menu1;
+    private javax.swing.JMenuItem menu2;
     private javax.swing.JTable tbl;
     private javax.swing.JMenu todayDate;
     private javax.swing.JTextField txtSearch;

@@ -202,7 +202,7 @@ public class LoginForm extends javax.swing.JFrame  {
                         this.dispose();   
                         break;
                     case"direktur":
-                        new PurchaseApprovalForm(entity).setVisible(true);
+                        new GoodsOrderApprovalForm(entity).setVisible(true);
                         this.dispose();
                         break;
                         

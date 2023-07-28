@@ -8,8 +8,41 @@ package com.org.sistempenjualan.entity;
  *
  * @author user
  */
-public class TransPurchaseDetail {
+public class TransSellDetail {
     private int index;
+    
+    private int id;
+    private int idBarang;
+    private String kodeBarang;
+    private String namaBarang;
+    private int qty;
+    private String remark;
+
+    public TransSellDetail() {
+    }
+
+    public TransSellDetail(String kodeBarang, int jumlahBarang, String remark) {
+        this.kodeBarang = kodeBarang;
+        this.qty = jumlahBarang;
+        this.remark = remark;
+    }
+        
+    public TransSellDetail(int id, int idBarang, String namaBarang, int jumlahBarang, String type) {
+        this.id = id;
+        this.idBarang = idBarang;
+        this.namaBarang = namaBarang;
+        this.qty = jumlahBarang;
+        this.remark = type;
+    }
+    
+    public TransSellDetail(int id, int idBarang, String kodeBarang, String namaBarang, int jumlahBarang, String type) {
+        this.id = id;
+        this.idBarang = idBarang;
+        this.kodeBarang = kodeBarang;
+        this.namaBarang = namaBarang;
+        this.qty = jumlahBarang;
+        this.remark = type;
+    }
 
     public int getIndex() {
         return index;
@@ -17,37 +50,6 @@ public class TransPurchaseDetail {
 
     public void setIndex(int index) {
         this.index = index;
-    }
-    private int id;
-    private int idBarang;
-    private String kodeBarang;
-    private String namaBarang;
-    private int jumlahBarang;
-    private String type;
-
-    public TransPurchaseDetail() {
-    }
-
-    public TransPurchaseDetail(String kodeBarang, int jumlahBarang) {
-        this.kodeBarang = kodeBarang;
-        this.jumlahBarang = jumlahBarang;
-    }
-        
-    public TransPurchaseDetail(int id, int idBarang, String namaBarang, int jumlahBarang, String type) {
-        this.id = id;
-        this.idBarang = idBarang;
-        this.namaBarang = namaBarang;
-        this.jumlahBarang = jumlahBarang;
-        this.type = type;
-    }
-    
-    public TransPurchaseDetail(int id, int idBarang, String kodeBarang, String namaBarang, int jumlahBarang, String type) {
-        this.id = id;
-        this.idBarang = idBarang;
-        this.kodeBarang = kodeBarang;
-        this.namaBarang = namaBarang;
-        this.jumlahBarang = jumlahBarang;
-        this.type = type;
     }
 
     public int getId() {
@@ -82,20 +84,19 @@ public class TransPurchaseDetail {
         this.namaBarang = namaBarang;
     }
 
-    public int getJumlahBarang() {
-        return jumlahBarang;
+    public int getQty() {
+        return qty;
     }
 
-    public void setJumlahBarang(int jumlahBarang) {
-        this.jumlahBarang = jumlahBarang;
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 
-    public String getType() {
-        return type;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
-    
 }

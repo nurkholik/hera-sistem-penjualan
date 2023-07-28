@@ -24,9 +24,9 @@ import javax.swing.JOptionPane;
  *
  * @author user
  */
-public class PurchaseDetailForm extends javax.swing.JPanel {
+public class GoodsOrderItemForm extends javax.swing.JPanel {
 
-    public PurchaseDetailForm(Window window) {
+    public GoodsOrderItemForm(Window window) {
         initComponents();
         initDialog(window);        
     }
@@ -85,7 +85,7 @@ public class PurchaseDetailForm extends javax.swing.JPanel {
         loadItemOption(excludeCode);
         setItemData();
 
-        modelDialog.setTitle((item == null ? "Add" : "Update") + " Purchase Item");
+        modelDialog.setTitle((item == null ? "Add" : "Update") + " Item");
         modelDialog.setVisible(true);        
     }
     
@@ -174,9 +174,7 @@ public class PurchaseDetailForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, 0))
+                    .addComponent(jLabel2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(cmbBarang, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
