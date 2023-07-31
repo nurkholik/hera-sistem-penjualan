@@ -4,6 +4,7 @@
  */
 package com.org.sistempenjualan.gui;
 
+import com.org.sistempenjualan.DbConnect;
 import com.org.sistempenjualan.UIUtil;
 import com.org.sistempenjualan.Utility;
 import com.org.sistempenjualan.constant.ApprovalStatus;
@@ -17,16 +18,25 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import static javax.swing.JComponent.TOOL_TIP_TEXT_KEY;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -47,6 +57,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
     private int purchaseId;
     private ActionListener actionListener;
     private JDialog modelDialog;
+    private TransPurchase purchase;
 
     /**
      * Creates new form PurchaseForm
@@ -171,30 +182,32 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         btnApprove.setVisible(false);
         btnReject.setVisible(false);
         btnRevise.setVisible(false);
+        btnPrint.setVisible(false);
     }
     
     private void loadPurchaseData(int purchaseId) {
         this.purchaseId = purchaseId;
-        TransPurchase transPurchase = purchaseDao.findById(purchaseId);
-        txtProject.setText(transPurchase.getProject());
-        txtDepartment.setText(transPurchase.getDepartment());     
-        transPurchase.getDetails().forEach(e -> {
+        purchase = purchaseDao.findById(purchaseId);
+        txtProject.setText(purchase.getProject());
+        txtDepartment.setText(purchase.getDepartment());     
+        purchase.getDetails().forEach(e -> {
             model.addRow(new Object[]{
                 e.getKodeBarang(), e.getNamaBarang(), e.getJumlahBarang()
             });
         });
         
-        boolean isRequested = transPurchase.getStatus().equals(ApprovalStatus.REQUESTED);
+        boolean isRequested = purchase.getStatus().equals(ApprovalStatus.REQUESTED);
         boolean isDirektur = entity.getRoleSession().equalsIgnoreCase(UserRole.DIREKTUR);
         btnApprove.setVisible(isDirektur && isRequested);
         btnReject.setVisible(isDirektur && isRequested);
         btnRevise.setVisible(isDirektur && isRequested);
+        btnPrint.setVisible(purchase.getStatus().equals(ApprovalStatus.APPROVED));
         panelApproval.setVisible(!isRequested);
         
         if (!isRequested) {
-            userApprove.setText(": " + (transPurchase.getApprovedBy() == null ? "-" : transPurchase.getApprovedBy()));
-            lblReason.setText(": " + (transPurchase.getRemark() == null ? "-" : transPurchase.getRemark()));
-            lblUserApprove.setText(" " + ApprovalStatus.getLabel(transPurchase.getStatus()));
+            userApprove.setText(": " + (purchase.getApprovedBy() == null ? "-" : purchase.getApprovedBy()));
+            lblReason.setText(": " + (purchase.getRemark() == null ? "-" : purchase.getRemark()));
+            lblUserApprove.setText(" " + ApprovalStatus.getLabel(purchase.getStatus()));
             
             Dimension dim = modelDialog.getSize();
             modelDialog.setSize(dim.width, dim.height + 65);
@@ -280,6 +293,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         lblUserApprove = new javax.swing.JLabel();
         userApprove = new javax.swing.JLabel();
         lblReason = new javax.swing.JLabel();
+        btnPrint = new javax.swing.JButton();
 
         jScrollPane1.setViewportView(jEditorPane1);
 
@@ -430,6 +444,13 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                 .addGap(40, 40, 40))
         );
 
+        btnPrint.setText("CETAK");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -466,7 +487,9 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnReject)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnRevise))
+                            .addComponent(btnRevise)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPrint))
                         .addComponent(panelApproval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
@@ -498,7 +521,8 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                     .addComponent(btnClose)
                     .addComponent(btnApprove)
                     .addComponent(btnReject)
-                    .addComponent(btnRevise))
+                    .addComponent(btnRevise)
+                    .addComponent(btnPrint))
                 .addGap(22, 22, 22))
         );
 
@@ -631,6 +655,31 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnReviseActionPerformed
 
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        try {
+            String namaFile = "src"+File.separator+"com"+File.separator+"org"+File.separator+"sistempenjualan"+File.separator+"report"+File.separator+"GoodsOrder.jasper";
+            Connection conn = DbConnect.ConnectDb();
+            
+            Map<String,Object> map =  new HashMap<>();
+            map.put("id", this.purchaseId);
+            map.put("project", txtProject.getText());
+            map.put("department", txtDepartment.getText());
+            map.put("request_by", purchase.getRequestBy());
+            map.put("request_date", purchase.getRequestDate());
+            map.put("approved_by", purchase.getApprovedBy());
+            map.put("approved_date", purchase.getApprovedDate());
+            map.put("remark", purchase.getRemark() == null ? "" : purchase.getRemark());
+            JasperPrint jprint = JasperFillManager.fillReport(namaFile, map, conn);
+            if(!jprint.getPages().isEmpty()){
+                JasperViewer.viewReport(jprint,false);
+            }else{
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan !");
+            }
+        } catch (HeadlessException | JRException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnPrintActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddItem;
     private javax.swing.JButton btnApprove;
@@ -638,6 +687,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnDetail;
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnReject;
     private javax.swing.JButton btnRevise;
     private javax.swing.JButton btnSave;

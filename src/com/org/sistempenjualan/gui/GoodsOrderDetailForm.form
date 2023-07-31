@@ -75,6 +75,8 @@
                           <Component id="btnReject" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnRevise" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="btnPrint" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="panelApproval" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -115,6 +117,7 @@
                   <Component id="btnApprove" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnReject" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnRevise" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnPrint" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
           </Group>
@@ -311,5 +314,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="btnPrint">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="CETAK"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
