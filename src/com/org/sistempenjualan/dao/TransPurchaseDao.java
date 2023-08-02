@@ -21,7 +21,7 @@ public interface TransPurchaseDao {
     boolean deleteById(int id);
     TransPurchase findById(int purchaseId);
     boolean update(TransPurchase purchase);
-    public boolean approve(String nik, int purchaseId);
-    public boolean reject(String nik, int purchaseId, String reason);
-    public boolean revise(String nik, int purchaseId, String reason);
+    public boolean approve(String nik, int purchaseId, String remark);
+    public boolean reject(String nik, int purchaseId, String remark);
+    public boolean revise(String nik, int purchaseId, String remark);
 }

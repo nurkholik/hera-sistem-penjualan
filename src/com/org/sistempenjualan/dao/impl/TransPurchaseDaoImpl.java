@@ -53,11 +53,12 @@ public class TransPurchaseDaoImpl implements TransPurchaseDao {
             // Insert trans purchase detail
             for (TransPurchaseDetail detail : transPurchase.getDetails()) {
                  stmt = con.prepareStatement("INSERT INTO "
-                        + "trans_purchase_detail (purchase_id, id_barang, qty) "
-                        + "VALUES (?, (select id from mst_barang where kode_barang = ? limit 1), ?)");
+                        + "trans_purchase_detail (purchase_id, id_barang, qty, type) "
+                        + "VALUES (?, (select id from mst_barang where kode_barang = ? limit 1), ?, ?)");
                  stmt.setInt(1, purchaseId);
                  stmt.setString(2, detail.getKodeBarang());
                  stmt.setInt(3, detail.getJumlahBarang());
+                 stmt.setString(4, detail.getType());
                  stmt.execute();
             }
             
@@ -160,7 +161,7 @@ public class TransPurchaseDaoImpl implements TransPurchaseDao {
                 
                 List<TransPurchaseDetail> details = new ArrayList<>();
                 
-                stmt = con.prepareStatement("SELECT a.id, a.id_barang, b.kode_barang, b.nama_barang, a.qty "
+                stmt = con.prepareStatement("SELECT a.id, a.id_barang, b.kode_barang, b.nama_barang, a.qty, a.type "
                     + "FROM trans_purchase_detail a "
                     + "INNER JOIN mst_barang b ON a.id_barang = b.id "
                     + "WHERE a.purchase_id = ?");
@@ -173,7 +174,7 @@ public class TransPurchaseDaoImpl implements TransPurchaseDao {
                             rs2.getString("kode_barang"),
                             rs2.getString("nama_barang"),
                             rs2.getInt("qty"),
-                            null
+                            rs2.getString("type")
                     ));
                 }
                 transPurchase.setDetails(details);
@@ -221,20 +222,22 @@ public class TransPurchaseDaoImpl implements TransPurchaseDao {
             for (TransPurchaseDetail d : purchase.getDetails()) {
                 if (existingItem.stream().anyMatch(e -> e.equals(d.getKodeBarang()))) {
                     // update
-                    stmt = con.prepareStatement("UPDATE trans_purchase_detail SET qty = ? "
+                    stmt = con.prepareStatement("UPDATE trans_purchase_detail SET qty = ?, type = ? "
                             + "WHERE purchase_id = ? AND id_barang = (SELECT x.id FROM mst_barang x WHERE x.kode_barang = ?)");
                     stmt.setInt(1, d.getJumlahBarang());
-                    stmt.setInt(2, purchase.getId());
-                    stmt.setString(3, d.getKodeBarang());
+                    stmt.setString(2, d.getType());
+                    stmt.setInt(3, purchase.getId());
+                    stmt.setString(4, d.getKodeBarang());
                     stmt.execute();
                 } else {
                     // insert
                     stmt = con.prepareStatement("INSERT INTO "
-                            + "trans_purchase_detail (purchase_id, id_barang, qty) "
-                            + "VALUES (?, (select id from mst_barang where kode_barang = ? limit 1), ?)");
+                            + "trans_purchase_detail (purchase_id, id_barang, qty, type) "
+                            + "VALUES (?, (select id from mst_barang where kode_barang = ? limit 1), ?, ?)");
                     stmt.setInt(1, purchase.getId());
                     stmt.setString(2, d.getKodeBarang());
                     stmt.setInt(3, d.getJumlahBarang());
+                    stmt.setString(4, d.getType());
                     stmt.execute();
                 }
             }
@@ -249,26 +252,26 @@ public class TransPurchaseDaoImpl implements TransPurchaseDao {
     }
 
     @Override
-    public boolean revise(String nik, int purchaseId, String reason) {
-        return updateStatus(nik, purchaseId, ApprovalStatus.NEED_REVISED, reason);
+    public boolean revise(String nik, int purchaseId, String remark) {
+        return updateStatus(nik, purchaseId, ApprovalStatus.NEED_REVISED, remark);
     }
 
     @Override
-    public boolean reject(String nik, int purchaseId, String reason) {
-        return updateStatus(nik, purchaseId, ApprovalStatus.REJECTED, reason);
+    public boolean reject(String nik, int purchaseId, String remark) {
+        return updateStatus(nik, purchaseId, ApprovalStatus.REJECTED, remark);
     }
 
     @Override
-    public boolean approve(String nik, int purchaseId) {
-        return updateStatus(nik, purchaseId, ApprovalStatus.APPROVED, "");
+    public boolean approve(String nik, int purchaseId, String remark) {
+        return updateStatus(nik, purchaseId, ApprovalStatus.APPROVED, remark);
     }
     
-    public boolean updateStatus(String nik, int purchaseId, String status, String reason) {
+    public boolean updateStatus(String nik, int purchaseId, String status, String remark) {
         try {
             con.setAutoCommit(false);
             stmt = con.prepareStatement("UPDATE trans_purchase SET status = ?, remark = ?, approved_by = ?, approved_date = now() WHERE id = ?");
             stmt.setString(1, status);
-            stmt.setString(2, reason);
+            stmt.setString(2, remark);
             stmt.setString(3, nik);
             stmt.setInt(4, purchaseId);
             stmt.execute();

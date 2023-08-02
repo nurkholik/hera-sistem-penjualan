@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Stock Report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="52c4cce1-fbfa-47a7-9cf1-14bc3e36024b">
-	<property name="ireport.zoom" value="1.7715610000000042"/>
+	<property name="ireport.zoom" value="1.4641000000000035"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="dateStart" class="java.util.Date"/>
@@ -18,7 +18,8 @@
 		coalesce((select sum(a1.qty) from trans_purchase_detail a1 inner join trans_purchase b1 on a1.purchase_id = b1.id where b1.status = 'Approved' and a1.id_barang = a.id
 		and date(b1.approved_date) > date($P{strDateEnd})), 0) +
 		coalesce((select sum(a1.qty) from trans_sell_detail a1 inner join trans_sell b1 on a1.sell_id = b1.id where b1.status = 'Approved' and a1.id_barang = a.id
-		and date(b1.approved_date) > date($P{strDateEnd})), 0) as stock
+		and date(b1.approved_date) > date($P{strDateEnd})), 0) as stock,
+        a.harga as price
 		from mst_barang a
 		group by a.kode_barang, a.nama_barang]]>
 	</queryString>
@@ -27,6 +28,7 @@
 	<field name="total_in" class="java.lang.Integer"/>
 	<field name="total_out" class="java.lang.Integer"/>
 	<field name="stock" class="java.lang.Integer"/>
+	<field name="price" class="java.lang.Long"/>
 	<variable name="dtStart" class="java.lang.String">
 		<variableExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").format($P{dateStart});]]></variableExpression>
 	</variable>
@@ -37,32 +39,55 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="60" splitType="Stretch">
+		<band height="84" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="802" height="60" uuid="a8e7d0c2-cc96-4b24-9f7e-4d5e163a8abb"/>
+				<reportElement x="0" y="0" width="802" height="84" uuid="a216e7f6-2cea-46a1-81b0-72fd1f0220bf"/>
 				<box>
-					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center">
-					<font size="18" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[LAPORAN STOK BARANG]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
+			<image>
+				<reportElement x="7" y="7" width="106" height="42" uuid="1e7afbe2-7d4b-4ccb-b454-4c0e7abdb2d4"/>
+				<imageExpression><![CDATA["E:\\Source\\Hera Windika\\SistemPenjualan2\\src\\resource\\images\\logo.png"]]></imageExpression>
+			</image>
 			<textField>
-				<reportElement x="216" y="29" width="370" height="20" uuid="786bc0aa-ecf7-445a-a24c-7c07ac7746de"/>
+				<reportElement x="253" y="42" width="299" height="20" uuid="786bc0aa-ecf7-445a-a24c-7c07ac7746de"/>
 				<textElement textAlignment="Center">
-					<font size="14"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd MMMM yyyy").format($P{dateStart}) + " - " + new SimpleDateFormat("dd MMMM yyyy").format($P{dateEnd})]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="7" y="53" width="135" height="26" uuid="ff5af2bc-d28d-4e35-ba24-ba2d63e03632"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Jl. Kembang Kuning Km 7 Kec. Klapanunggal Kab. Bogor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="17" width="559" height="25" uuid="03568ad9-a8b6-43b5-a388-10281d9c6f5e"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN STOK BARANG]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="6" splitType="Stretch"/>
+		<band height="13" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="46" splitType="Stretch">
@@ -81,7 +106,7 @@
 				<text><![CDATA[No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="37" y="1" width="153" height="40" uuid="b7f74eac-b045-414a-bcda-d02159d8efdf"/>
+				<reportElement x="37" y="1" width="129" height="40" uuid="b7f74eac-b045-414a-bcda-d02159d8efdf"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -95,7 +120,7 @@
 				<text><![CDATA[Kode Barang]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="502" y="1" width="100" height="40" uuid="25f12f95-6cc0-4555-bbde-3b285db8ff9e">
+				<reportElement x="413" y="1" width="100" height="40" uuid="25f12f95-6cc0-4555-bbde-3b285db8ff9e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -111,7 +136,7 @@
 				<text><![CDATA[Total Barang Masuk]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="702" y="1" width="100" height="40" uuid="712e866a-1249-4d58-a319-71cca3eca457">
+				<reportElement x="613" y="1" width="79" height="40" uuid="712e866a-1249-4d58-a319-71cca3eca457">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -127,7 +152,7 @@
 				<text><![CDATA[Jumlah]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="190" y="1" width="312" height="40" uuid="0131e4ef-0151-475b-bede-38aafa286f76"/>
+				<reportElement x="166" y="1" width="247" height="40" uuid="0131e4ef-0151-475b-bede-38aafa286f76"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -141,7 +166,7 @@
 				<text><![CDATA[Nama Barang]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="602" y="1" width="100" height="40" uuid="aa679c00-7384-4851-b75f-219b75f728b9">
+				<reportElement x="513" y="1" width="100" height="40" uuid="aa679c00-7384-4851-b75f-219b75f728b9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -156,30 +181,39 @@
 				</textElement>
 				<text><![CDATA[Total Barang Keluar]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="692" y="1" width="110" height="40" uuid="02f2fd69-e182-4732-a7ff-3b9f34c30690">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Harga]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="25" splitType="Stretch">
 			<textField>
-				<reportElement x="190" y="0" width="312" height="20" uuid="4a7596d0-0bf7-4b68-9781-e94d3cca539a"/>
+				<reportElement x="166" y="0" width="247" height="20" uuid="4a7596d0-0bf7-4b68-9781-e94d3cca539a"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="37" y="0" width="152" height="20" uuid="0d235f7f-5398-4d63-9491-5548f5dd6030"/>
+				<reportElement x="37" y="0" width="128" height="20" uuid="0d235f7f-5398-4d63-9491-5548f5dd6030"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{kode_barang}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="502" y="0" width="100" height="20" uuid="b63dc994-92e5-4e5e-9464-01e296a4908f"/>
-				<textElement textAlignment="Center">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{total_in}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="0" width="37" height="20" uuid="087b7764-1962-4462-8e3c-ba64ac7bbd03"/>
@@ -191,19 +225,33 @@
 			<line>
 				<reportElement x="0" y="20" width="802" height="1" uuid="d6c31c31-f31f-43b4-a309-852517782606"/>
 			</line>
-			<textField>
-				<reportElement x="602" y="0" width="100" height="20" uuid="991c09f0-55df-437c-9ff3-f2f786bcafc8"/>
+			<textField pattern="#,##0">
+				<reportElement x="413" y="0" width="100" height="20" uuid="b63dc994-92e5-4e5e-9464-01e296a4908f"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_in}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="513" y="0" width="100" height="20" uuid="991c09f0-55df-437c-9ff3-f2f786bcafc8"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_out}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="702" y="0" width="100" height="20" uuid="839ae2f6-0e12-45d0-b480-ebc842a60b18"/>
+			<textField pattern="#,##0">
+				<reportElement x="613" y="0" width="79" height="20" uuid="839ae2f6-0e12-45d0-b480-ebc842a60b18"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{stock}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="692" y="0" width="110" height="20" uuid="d1bb56ad-0c89-48c4-accc-3e6ad74dfac9"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price} * $F{stock}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

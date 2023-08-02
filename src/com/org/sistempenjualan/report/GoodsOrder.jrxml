@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Goods Order" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8b22ae73-1160-44f3-b734-345f52aebd28">
-	<property name="ireport.zoom" value="1.7715610000000037"/>
+	<property name="ireport.zoom" value="1.6105100000000039"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="25"/>
+	<property name="ireport.y" value="36"/>
 	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="project" class="java.lang.String"/>
 	<parameter name="department" class="java.lang.String"/>
@@ -12,20 +12,21 @@
 	<parameter name="approved_date" class="java.util.Date"/>
 	<parameter name="remarks" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[select c.kode_barang, c.nama_barang, a.qty from trans_purchase_detail a
+		<![CDATA[select c.kode_barang, c.nama_barang, a.qty, a.type from trans_purchase_detail a
 inner join trans_purchase b on a.purchase_id = b.id
 inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 	</queryString>
 	<field name="kode_barang" class="java.lang.String"/>
 	<field name="nama_barang" class="java.lang.String"/>
 	<field name="qty" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="146" splitType="Stretch">
+		<band height="158" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="72" width="555" height="74" uuid="caee0b8d-8504-4973-ae6b-635e9a6d823b"/>
+				<reportElement x="0" y="84" width="555" height="74" uuid="caee0b8d-8504-4973-ae6b-635e9a6d823b"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -35,7 +36,68 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="72" uuid="a914adad-2e35-4d01-92f0-8ceb7027a489"/>
+				<reportElement x="8" y="96" width="79" height="16" uuid="0b80b817-ba5b-4c4c-8dce-4e22705bbe42"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DAY/DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="112" width="79" height="16" uuid="884ed976-422a-4fe7-a39b-4a2f51407ec3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SITE/PROJECT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="128" width="79" height="16" uuid="7cd0a53f-bf72-44be-99e0-6e6d17b532aa"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPARTMENT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="96" width="9" height="16" uuid="559c4767-21e2-4950-bc48-8140d2545027"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="112" width="9" height="16" uuid="03b3bd56-8da6-41b7-8507-24a354257a2a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="128" width="9" height="16" uuid="f7c9a849-cdd5-4d37-a414-09b01d762e7b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="101" y="128" width="442" height="16" uuid="624c829b-fcff-4ae5-ae3d-b0b18f21930d"/>
+				<textFieldExpression><![CDATA[$P{department}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="96" width="442" height="16" uuid="07298724-45fc-4297-afe7-67b90ada9cd1"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd MMMM yyyy").format($P{request_date})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="112" width="442" height="16" uuid="efc3cbf6-10bf-4015-9e2d-1733ae8017c8"/>
+				<textFieldExpression><![CDATA[$P{project}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="8" y="53" width="135" height="26" uuid="d723250c-e707-44d8-b41b-5a2c3dad16c2"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Jl. Kembang Kuning Km 7 Kec. Klapanunggal Kab. Bogor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="84" uuid="7dfd3557-70fe-4dfb-97ca-41b30f6e5ed2"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -43,66 +105,25 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="121" y="27" width="314" height="25" uuid="3b46c950-8588-47c0-897e-ea7d66b166e6"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FORM GOODS ORDER LIST]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="7" y="84" width="79" height="16" uuid="0b80b817-ba5b-4c4c-8dce-4e22705bbe42"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[DAY/DATE]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="7" y="100" width="79" height="16" uuid="884ed976-422a-4fe7-a39b-4a2f51407ec3"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[SITE/PROJECT]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="7" y="116" width="79" height="16" uuid="7cd0a53f-bf72-44be-99e0-6e6d17b532aa"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[DEPARTMENT]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="87" y="84" width="9" height="16" uuid="559c4767-21e2-4950-bc48-8140d2545027"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="87" y="100" width="9" height="16" uuid="03b3bd56-8da6-41b7-8507-24a354257a2a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="87" y="116" width="9" height="16" uuid="f7c9a849-cdd5-4d37-a414-09b01d762e7b"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="100" y="116" width="442" height="16" uuid="624c829b-fcff-4ae5-ae3d-b0b18f21930d"/>
-				<textFieldExpression><![CDATA[$P{department}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="100" y="84" width="442" height="16" uuid="07298724-45fc-4297-afe7-67b90ada9cd1"/>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("dd MMMM yyyy").format($P{request_date})]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="100" y="100" width="442" height="16" uuid="efc3cbf6-10bf-4015-9e2d-1733ae8017c8"/>
-				<textFieldExpression><![CDATA[$P{project}]]></textFieldExpression>
-			</textField>
 			<image>
-				<reportElement x="7" y="7" width="101" height="38" uuid="d7875a56-a1a0-498b-9f76-3dd4bbbe4e0a"/>
+				<reportElement x="8" y="7" width="106" height="42" uuid="2942dd9e-7ecb-400b-8dba-cadc8f3e393f"/>
 				<imageExpression><![CDATA["E:\\Source\\Hera Windika\\SistemPenjualan2\\src\\resource\\images\\logo.png"]]></imageExpression>
 			</image>
 		</band>
@@ -113,14 +134,14 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				<reportElement mode="Transparent" x="0" y="0" width="555" height="28" uuid="2a5305fe-d0cf-4ec4-a365-8646eef31459"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="39" y="0" width="123" height="28" uuid="7eda0ec5-10ac-417d-8e4d-4fc4511fa6e0"/>
+				<reportElement x="39" y="0" width="104" height="28" uuid="7eda0ec5-10ac-417d-8e4d-4fc4511fa6e0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[ITEM CODE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="409" y="0" width="146" height="28" uuid="be00bcc4-b8f1-471d-aa8b-0c3b12817180"/>
+				<reportElement x="362" y="0" width="65" height="28" uuid="be00bcc4-b8f1-471d-aa8b-0c3b12817180"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -134,36 +155,23 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				<text><![CDATA[NO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="162" y="0" width="247" height="28" uuid="b3b2a7ef-9784-4756-85e4-0e681fdebfb6"/>
+				<reportElement x="143" y="0" width="219" height="28" uuid="b3b2a7ef-9784-4756-85e4-0e681fdebfb6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[ITEM DESCRIPTION]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="427" y="0" width="128" height="28" uuid="c0ce4d76-def2-47ce-970d-fc654a0bd1ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PURCHASE TYPE]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField>
-				<reportElement x="39" y="0" width="123" height="20" uuid="0a458aec-f9e8-415a-b6da-2a8fe7343017"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{kode_barang}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="409" y="0" width="146" height="20" uuid="7d1608f7-c55b-43c7-bc54-232b6fea5ae1"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="0" width="39" height="20" uuid="3fa73b34-5c7c-412a-8d22-5479d99f1793"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="162" y="0" width="247" height="20" uuid="ff330906-1b4f-4cd9-97b2-099020d535d3"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="20" uuid="99747567-8d40-43b8-9914-4b97620bf44e"/>
 				<box>
@@ -174,6 +182,31 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="39" y="0" width="104" height="20" uuid="0a458aec-f9e8-415a-b6da-2a8fe7343017"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{kode_barang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="362" y="0" width="65" height="20" uuid="7d1608f7-c55b-43c7-bc54-232b6fea5ae1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="39" height="20" uuid="3fa73b34-5c7c-412a-8d22-5479d99f1793"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="143" y="0" width="219" height="20" uuid="ff330906-1b4f-4cd9-97b2-099020d535d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="0" width="128" height="20" uuid="ffbcfcdc-dbae-4834-99fd-e4ff221940ba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
@@ -199,7 +232,7 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				</textElement>
 				<text><![CDATA[Remarks]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="27" y="37" width="528" height="42" uuid="dcec3c5f-c318-4517-80d3-890341f3aa06"/>
 				<box topPadding="8" leftPadding="8" bottomPadding="8" rightPadding="8">
 					<topPen lineWidth="1.0"/>
@@ -209,7 +242,7 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				</box>
 				<textFieldExpression><![CDATA[$P{remarks}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="455" y="184" width="100" height="20" uuid="2494a203-2b55-4908-8cbc-88f3e5c5049e"/>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -230,7 +263,7 @@ inner join mst_barang c on a.id_barang = c.id where b.id = $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{request_by}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="455" y="164" width="100" height="20" uuid="783e7a19-ee4e-4a7d-a440-6ced4a4a8c9a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{approved_by}]]></textFieldExpression>

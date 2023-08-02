@@ -67,7 +67,7 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
         dialogContainer.setLayout(new BorderLayout());
         
         dialogContainer.add(this, BorderLayout.SOUTH);
-        modelDialog.setSize(350, 230);
+        modelDialog.setSize(350, 290);
         modelDialog.setLocationRelativeTo(null);
     }
     
@@ -96,6 +96,7 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
     
     private void clearForm() {
         txtJumlah.setText("0");
+        txtType.setText("");
         UIUtil.setSelectedIndex(cmbBarang, null);
     }
     
@@ -105,6 +106,7 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
         else {
             UIUtil.setSelectedIndex(cmbBarang, item.getKodeBarang());
             txtJumlah.setText(NumberFormat.getInstance().format(item.getJumlahBarang()));
+            txtType.setText(item.getType());
         }
     }
     
@@ -124,6 +126,8 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         cmbBarang = new javax.swing.JComboBox<>();
         btnDelete = new javax.swing.JButton();
+        txtType = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         btnCancel.setText("CANCEL");
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -139,7 +143,7 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Barang");
+        jLabel2.setText("Item");
 
         txtJumlah.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -158,7 +162,7 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setText("Jumlah");
+        jLabel1.setText("Qty");
 
         btnDelete.setText("HAPUS");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -166,6 +170,25 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
                 btnDeleteActionPerformed(evt);
             }
         });
+
+        txtType.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTypeFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTypeFocusLost(evt);
+            }
+        });
+        txtType.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTypeKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTypeKeyTyped(evt);
+            }
+        });
+
+        jLabel3.setText("Purchase Type");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -185,8 +208,11 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
                                 .addComponent(btnDelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                                 .addComponent(btnCancel))
+                            .addComponent(txtType, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(16, 16, 16))))
         );
@@ -202,11 +228,15 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit)
                     .addComponent(btnCancel)
                     .addComponent(btnDelete))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGap(22, 22, 22))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -232,10 +262,12 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
                 item.setKodeBarang(barang[0].trim());
                 item.setNamaBarang(barang[1].trim());
                 item.setJumlahBarang(jumlah);
+                item.setType(txtType.getText());
                 actionListener.onAdded(item);
                 dismis();
             } else if (this.FLAG == EDIT) {
                 item.setJumlahBarang(jumlah);
+                item.setType(txtType.getText());
                 actionListener.onUpdated(item);
                 dismis();
             }
@@ -266,6 +298,22 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
         dismis();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void txtTypeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTypeFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTypeFocusGained
+
+    private void txtTypeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTypeFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTypeFocusLost
+
+    private void txtTypeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTypeKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTypeKeyPressed
+
+    private void txtTypeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTypeKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTypeKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
@@ -274,6 +322,8 @@ public class GoodsOrderItemForm extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cmbBarang;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField txtJumlah;
+    private javax.swing.JTextField txtType;
     // End of variables declaration//GEN-END:variables
 }

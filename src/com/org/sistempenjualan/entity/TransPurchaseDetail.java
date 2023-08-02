@@ -28,9 +28,10 @@ public class TransPurchaseDetail {
     public TransPurchaseDetail() {
     }
 
-    public TransPurchaseDetail(String kodeBarang, int jumlahBarang) {
+    public TransPurchaseDetail(String kodeBarang, int jumlahBarang, String type) {
         this.kodeBarang = kodeBarang;
         this.jumlahBarang = jumlahBarang;
+        this.type = type;
     }
         
     public TransPurchaseDetail(int id, int idBarang, String namaBarang, int jumlahBarang, String type) {

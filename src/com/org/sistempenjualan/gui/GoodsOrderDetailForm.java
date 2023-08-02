@@ -85,6 +85,10 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                     item.getJumlahBarang(), 
                     item.getIndex(), 
                     2);
+            model.setValueAt(
+                    item.getType(), 
+                    item.getIndex(), 
+                    3);
         }
 
         @Override
@@ -92,7 +96,8 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
             model.addRow(new Object[]{
                 item.getKodeBarang(), 
                 item.getNamaBarang(), 
-                item.getJumlahBarang()
+                item.getJumlahBarang(),
+                item.getType()
             });
         }
 
@@ -138,6 +143,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         model.addColumn("Item Code");
         model.addColumn("Item Description");
         model.addColumn("Qty");
+        model.addColumn("Purchase Type");
         tblItem.setModel(model);
         tblItem.setDefaultEditor(Object.class, null);
         
@@ -192,7 +198,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         txtDepartment.setText(purchase.getDepartment());     
         purchase.getDetails().forEach(e -> {
             model.addRow(new Object[]{
-                e.getKodeBarang(), e.getNamaBarang(), e.getJumlahBarang()
+                e.getKodeBarang(), e.getNamaBarang(), e.getJumlahBarang(), e.getType()
             });
         });
         
@@ -201,7 +207,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         btnApprove.setVisible(isDirektur && isRequested);
         btnReject.setVisible(isDirektur && isRequested);
         btnRevise.setVisible(isDirektur && isRequested);
-        btnPrint.setVisible(purchase.getStatus().equals(ApprovalStatus.APPROVED));
+        btnPrint.setVisible(!purchase.getStatus().equals(ApprovalStatus.REJECTED));
         panelApproval.setVisible(!isRequested);
         
         if (!isRequested) {
@@ -228,6 +234,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         item.setKodeBarang(tblItem.getValueAt(row, 0).toString());
         item.setNamaBarang(tblItem.getValueAt(row, 1).toString());
         item.setJumlahBarang(Integer.parseInt(tblItem.getValueAt(row, 2).toString()));
+        item.setType(tblItem.getValueAt(row, 3).toString());
         new GoodsOrderItemForm(this).show(
                 item, 
                 FLAG,
@@ -551,22 +558,23 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
             return;
         
         if (isValidInput()) {
-            TransPurchase purchase = new TransPurchase();
-            purchase.setDepartment(txtDepartment.getText());
-            purchase.setProject(txtProject.getText());
-            purchase.setLevelStatus("");
-            purchase.setRequestBy(entity.getNikSession());
+            TransPurchase mPurchase = new TransPurchase();
+            mPurchase.setDepartment(txtDepartment.getText());
+            mPurchase.setProject(txtProject.getText());
+            mPurchase.setLevelStatus("");
+            mPurchase.setRequestBy(entity.getNikSession());
             
             List<TransPurchaseDetail> details = new ArrayList<>();
             for (int index = 0; index < tblItem.getModel().getRowCount(); index++) {
                 details.add(new TransPurchaseDetail(
                         tblItem.getValueAt(index, 0).toString(), 
-                        Integer.parseInt(tblItem.getValueAt(index, 2).toString())
+                        Integer.parseInt(tblItem.getValueAt(index, 2).toString()),
+                        tblItem.getValueAt(index, 3).toString()
                 ));
             }
-            purchase.setDetails(details);
+            mPurchase.setDetails(details);
             if (FLAG == ADD) {
-                if (purchaseDao.add(purchase)) {
+                if (purchaseDao.add(mPurchase)) {
                     JOptionPane.showMessageDialog(null, "Pengajuan berhasil dibuat.");
                     actionListener.onSubmit();
                     dismis();
@@ -574,8 +582,8 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Pengajuan gagal dibuat!");                
             } 
             if (FLAG == EDIT) {
-                purchase.setId(this.purchaseId);
-                if (purchaseDao.update(purchase)) {
+                mPurchase.setId(this.purchaseId);
+                if (purchaseDao.update(mPurchase)) {
                     JOptionPane.showMessageDialog(null, "Pengajuan berhasil diperbarui.");
                     actionListener.onSubmit();
                     dismis();
@@ -613,7 +621,12 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         if (JOptionPane.showConfirmDialog(this, 
                     "Apakah anda yakin ingin menyetujui pengajuan ini ?", 
                     "Konfirmasi",JOptionPane.YES_NO_OPTION) == 0) {
-            if (purchaseDao.approve(entity.getNikSession(), purchaseId)) {
+            
+            String remark = JOptionPane.showInputDialog(this, 
+                    "Masukkan keterangan !", "Keterangan", 
+                    JOptionPane.OK_CANCEL_OPTION);
+            
+            if (remark != null && purchaseDao.approve(entity.getNikSession(), purchaseId, remark)) {
                 JOptionPane.showMessageDialog(this, "Pengajuan berhasil di setujui.");
                 actionListener.onSubmit();
                 dismis();
@@ -626,11 +639,11 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                     "Apakah anda yakin ingin menolak pengajuan ini ?", 
                     "Konfirmasi",JOptionPane.YES_NO_OPTION) == 0) {
             
-            String reason = JOptionPane.showInputDialog(this, 
+            String remark = JOptionPane.showInputDialog(this, 
                     "Masukkan keterangan !", "Keterangan", 
                     JOptionPane.OK_CANCEL_OPTION);
             
-            if ((reason != null) && purchaseDao.reject(entity.getNikSession(), purchaseId, reason)) {
+            if ((remark != null) && purchaseDao.reject(entity.getNikSession(), purchaseId, remark)) {
                 JOptionPane.showMessageDialog(this, "Pengajuan berhasil ditolak.");
                 actionListener.onSubmit();
                 dismis();
@@ -643,11 +656,11 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
                     "Apakah anda yakin ingin meminta perubahan pada pengajuan ini ?", 
                     "Konfirmasi",JOptionPane.YES_NO_OPTION) == 0) {
             
-            String reason = JOptionPane.showInputDialog(this, 
+            String remark = JOptionPane.showInputDialog(this, 
                     "Masukkan keterangan !", "Keterangan", 
                     JOptionPane.OK_CANCEL_OPTION);
             
-            if ((reason != null) && purchaseDao.revise(entity.getNikSession(), purchaseId, reason)) {
+            if ((remark != null) && purchaseDao.revise(entity.getNikSession(), purchaseId, remark)) {
                 JOptionPane.showMessageDialog(this, "Pengajuan berhasil dikembalikan.");
                 actionListener.onSubmit();
                 dismis();
@@ -659,6 +672,7 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
         try {
             String namaFile = "src"+File.separator+"com"+File.separator+"org"+File.separator+"sistempenjualan"+File.separator+"report"+File.separator+"GoodsOrder.jasper";
             Connection conn = DbConnect.ConnectDb();
+            boolean isApproved = purchase.getStatus().equals(ApprovalStatus.APPROVED);
             
             Map<String,Object> map =  new HashMap<>();
             map.put("id", this.purchaseId);
@@ -666,9 +680,11 @@ public class GoodsOrderDetailForm extends javax.swing.JFrame {
             map.put("department", txtDepartment.getText());
             map.put("request_by", purchase.getRequestBy());
             map.put("request_date", purchase.getRequestDate());
-            map.put("approved_by", purchase.getApprovedBy());
-            map.put("approved_date", purchase.getApprovedDate());
-            map.put("remark", purchase.getRemark() == null ? "" : purchase.getRemark());
+            
+            map.put("approved_by", isApproved ? purchase.getApprovedBy() : null);
+            map.put("approved_date", isApproved ? purchase.getApprovedDate() : null);
+            map.put("remark", isApproved ? purchase.getRemark() : null);
+            
             JasperPrint jprint = JasperFillManager.fillReport(namaFile, map, conn);
             if(!jprint.getPages().isEmpty()){
                 JasperViewer.viewReport(jprint,false);
